@@ -1,0 +1,8 @@
+//
+// Created by Sixik on 03.12.2025.
+//
+
+#ifndef NOESISGUIJAVA_DEBUGHFILE_H
+#define NOESISGUIJAVA_DEBUGHFILE_H
+
+#endif //NOESISGUIJAVA_DEBUGHFILE_H
