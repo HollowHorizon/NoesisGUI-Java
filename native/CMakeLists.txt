@@ -47,6 +47,13 @@ add_library(noesis_jni SHARED
         src/NsDrawing/NSInt32RectJni.cpp
         src/utils/NSJniUtils.cpp
         src/utils/NSJniUtils.h
+        src/NsCore/NsSymbolJni.cpp
+        src/NsCore/NsTypeJni.cpp
+        src/NsCore/NsDispatcherObjectJni.cpp
+        src/NsCore/NSIViewJni.cpp
+        src/NsCore/NsBaseComponentJni.cpp
+        src/NsRender/NsRenderTargetJni.cpp
+        src/NsRender/NsRenderDeviceJni.cpp
 )
 
 # Линкуемся по .lib

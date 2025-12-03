@@ -8,7 +8,10 @@
 
 #include "NsDrawing/Int32Rect.h"
 #include "NsDrawing/Point.h"
+#include "NsGui/Grid.h"
+#include "NsGui/IntegrationAPI.h"
 #include "NsMath/Vector.h"
+#include "NsRender/RenderDevice.h"
 
 
 namespace Noesis {
@@ -145,6 +148,36 @@ public:
         env->SetFloatField(dst, yField, src.y);
         env->SetFloatField(dst, zField, src.z);
         env->SetFloatField(dst, wField, src.w);
+    }
+
+    static void DeviceCapsToCopy(JNIEnv *env, Noesis::DeviceCaps &src, const jobject dst) {
+        const jclass cls = env->GetObjectClass(dst);
+        const jfieldID centerPixelOffset = env->GetFieldID(cls, "centerPixelOffset", "F");
+        const jfieldID linearRendering = env->GetFieldID(cls, "linearRendering", "Z");
+        const jfieldID subpixelRendering = env->GetFieldID(cls, "subpixelRendering", "Z");
+        const jfieldID depthRangeZeroToOne = env->GetFieldID(cls, "depthRangeZeroToOne", "Z");
+        const jfieldID clipSpaceYInverted = env->GetFieldID(cls, "clipSpaceYInverted", "Z");
+
+        src.centerPixelOffset = env->GetFloatField(dst, centerPixelOffset);
+        src.linearRendering = env->GetBooleanField(dst, linearRendering);
+        src.subpixelRendering = env->GetBooleanField(dst, subpixelRendering);
+        src.depthRangeZeroToOne = env->GetBooleanField(dst, depthRangeZeroToOne);
+        src.clipSpaceYInverted = env->GetBooleanField(dst, clipSpaceYInverted);
+    }
+
+    static void DeviceCapsFromCopy(JNIEnv *env, const Noesis::DeviceCaps &src, jobject dst) {
+        const jclass cls = env->GetObjectClass(dst);
+        const jfieldID centerPixelOffset = env->GetFieldID(cls, "centerPixelOffset", "F");
+        const jfieldID linearRendering = env->GetFieldID(cls, "linearRendering", "Z");
+        const jfieldID subpixelRendering = env->GetFieldID(cls, "subpixelRendering", "Z");
+        const jfieldID depthRangeZeroToOne = env->GetFieldID(cls, "depthRangeZeroToOne", "Z");
+        const jfieldID clipSpaceYInverted = env->GetFieldID(cls, "clipSpaceYInverted", "Z");
+
+        env->SetFloatField(dst, centerPixelOffset, src.centerPixelOffset);
+        env->SetBooleanField(dst, linearRendering, src.linearRendering);
+        env->SetBooleanField(dst, subpixelRendering, src.subpixelRendering);
+        env->SetBooleanField(dst, depthRangeZeroToOne, src.depthRangeZeroToOne);
+        env->SetBooleanField(dst, clipSpaceYInverted, src.clipSpaceYInverted);
     }
 };
 

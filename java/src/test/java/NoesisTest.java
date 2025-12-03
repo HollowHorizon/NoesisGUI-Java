@@ -1,3 +1,5 @@
+import dev.sixik.noesisgui.nscore.NSSymbol;
+import dev.sixik.noesisgui.nscore.NSType;
 import dev.sixik.noesisgui.nsdrawing.NSColor;
 import dev.sixik.noesisgui.nsdrawing.NSCornerRadius;
 import dev.sixik.noesisgui_ini.NoesisGuiJava;
@@ -60,6 +62,17 @@ public class NoesisTest {
             System.out.println(radius.getTopRight());
         }
         space();
+        start("NSSymbol");
+        try(NSSymbol symbol = new NSSymbol(20)) {
+            System.out.println(symbol.getPtr());
+            System.out.println(symbol.isNull());
+        }
+        end();
+
+        start("NSType");
+        try(NSType type = new NSType("fobos")) {
+            System.out.println(type.getTypeId());
+        }
         end();
 
     }
