@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-
+set(NATIVE_OUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../java/src/main/resources/native/win64")
 
 set(NOESIS_SDK_DIR "${CMAKE_SOURCE_DIR}/NoesisSDK" CACHE PATH "Local Noesis SDK")
 set(JAVA_HOME "C:/Program Files/Java/jdk-21" CACHE PATH "Path to JDK 21")
@@ -43,6 +43,10 @@ endif()
 
 add_library(noesis_jni SHARED
         src/NsDrawing/NSColorJni.cpp
+        src/NsDrawing/NSCornerRadiusJni.cpp
+        src/NsDrawing/NSInt32RectJni.cpp
+        src/utils/NSJniUtils.cpp
+        src/utils/NSJniUtils.h
 )
 
 # Линкуемся по .lib
@@ -71,4 +75,26 @@ endif()
 
 set_target_properties(noesis_jni PROPERTIES
         OUTPUT_NAME "noesis_jni"
+        RUNTIME_OUTPUT_DIRECTORY "${NATIVE_OUT_DIR}"
 )
+
+# Для многоконфигурационных (Visual Studio, Xcode) лучше так:
+foreach(cfg IN LISTS CMAKE_CONFIGURATION_TYPES)
+    string(TOUPPER "${cfg}" CFG_UPPER)
+    set_target_properties(noesis_jni PROPERTIES
+            RUNTIME_OUTPUT_DIRECTORY_${CFG_UPPER} "${NATIVE_OUT_DIR}"
+    )
+endforeach()
+
+# И копирование Noesis.dll / NoesisApp.dll уже в ЭТУ же папку:
+if (NOESIS_BIN_DIR)
+    add_custom_command(TARGET noesis_jni POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E make_directory "${NATIVE_OUT_DIR}"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${NOESIS_BIN_DIR}/Noesis.dll"
+            "${NATIVE_OUT_DIR}/Noesis.dll"
+            COMMAND ${CMAKE_COMMAND} -E copy_if_different
+            "${NOESIS_BIN_DIR}/NoesisApp.dll"
+            "${NATIVE_OUT_DIR}/NoesisApp.dll"
+    )
+endif()

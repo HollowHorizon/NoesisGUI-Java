@@ -19,9 +19,11 @@
 *.tar.gz
 *.rar
 
+# Java files
 /java/.gradle
 /java/.idea
 
+# C++ files
 /native/.idea
 /native/cmake-build-debug
 /native/build
