@@ -8,6 +8,7 @@
 
 #include "NsDrawing/Int32Rect.h"
 #include "NsDrawing/Point.h"
+#include "NsGui/IView.h"
 #include "NsMath/Matrix.h"
 #include "NsMath/Vector.h"
 #include "NsRender/RenderDevice.h"
@@ -329,6 +330,120 @@ public:
         env->SetFloatField(jMat, m31, r3.y);
         env->SetFloatField(jMat, m32, r3.z);
         env->SetFloatField(jMat, m33, r3.w);
+
+        env->DeleteLocalRef(cls);
+    }
+
+    static void TessellationMaxPixelErrorToCopy(JNIEnv *env, Noesis::TessellationMaxPixelError &error,
+                                                jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+        const auto field = env->GetFieldID(cls, "error", "F");
+        error.error = env->GetFloatField(cls, field);
+        env->DeleteLocalRef(cls);
+    }
+
+    static void TessellationMaxPixelErrorFromCopy(JNIEnv *env, const Noesis::TessellationMaxPixelError &error,
+                                                  jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+        const auto field = env->GetFieldID(cls, "error", "F");
+
+        env->SetFloatField(cls, field, error.error);
+
+        env->DeleteLocalRef(cls);
+    }
+
+    static void ViewStatsToCopy(JNIEnv *env, Noesis::ViewStats &stats,
+                                jobject javaClass) {
+        if (javaClass == nullptr) return;
+
+        jclass cls = env->GetObjectClass(javaClass);
+
+        jfieldID frameTime = env->GetFieldID(cls, "frameTime", "F");
+        jfieldID updateTime = env->GetFieldID(cls, "updateTime", "F");
+        jfieldID renderTime = env->GetFieldID(cls, "renderTime", "F");
+        jfieldID triangles = env->GetFieldID(cls, "triangles", "J");
+        jfieldID draws = env->GetFieldID(cls, "draws", "J");
+        jfieldID batches = env->GetFieldID(cls, "batches", "J");
+        jfieldID tessellations = env->GetFieldID(cls, "tessellations", "J");
+        jfieldID flushes = env->GetFieldID(cls, "flushes", "J");
+        jfieldID geometrySize = env->GetFieldID(cls, "geometrySize", "J");
+        jfieldID masks = env->GetFieldID(cls, "masks", "J");
+        jfieldID opacities = env->GetFieldID(cls, "opacities", "J");
+        jfieldID renderTargetSwitches = env->GetFieldID(cls, "renderTargetSwitches", "J");
+        jfieldID uploadedRamps = env->GetFieldID(cls, "uploadedRamps", "J");
+        jfieldID rasterizedGlyphs = env->GetFieldID(cls, "rasterizedGlyphs", "J");
+        jfieldID discardedGlyphTiles = env->GetFieldID(cls, "discardedGlyphTiles", "J");
+
+        stats.frameTime = env->GetFloatField(javaClass, frameTime);
+        stats.updateTime = env->GetFloatField(javaClass, updateTime);
+        stats.renderTime = env->GetFloatField(javaClass, renderTime);
+
+        stats.triangles = static_cast<decltype(stats.triangles)>(
+            env->GetLongField(javaClass, triangles));
+        stats.draws = static_cast<decltype(stats.draws)>(
+            env->GetLongField(javaClass, draws));
+        stats.batches = static_cast<decltype(stats.batches)>(
+            env->GetLongField(javaClass, batches));
+        stats.tessellations = static_cast<decltype(stats.tessellations)>(
+            env->GetLongField(javaClass, tessellations));
+        stats.flushes = static_cast<decltype(stats.flushes)>(
+            env->GetLongField(javaClass, flushes));
+        stats.geometrySize = static_cast<decltype(stats.geometrySize)>(
+            env->GetLongField(javaClass, geometrySize));
+        stats.masks = static_cast<decltype(stats.masks)>(
+            env->GetLongField(javaClass, masks));
+        stats.opacities = static_cast<decltype(stats.opacities)>(
+            env->GetLongField(javaClass, opacities));
+        stats.renderTargetSwitches = static_cast<decltype(stats.renderTargetSwitches)>(
+            env->GetLongField(javaClass, renderTargetSwitches));
+        stats.uploadedRamps = static_cast<decltype(stats.uploadedRamps)>(
+            env->GetLongField(javaClass, uploadedRamps));
+        stats.rasterizedGlyphs = static_cast<decltype(stats.rasterizedGlyphs)>(
+            env->GetLongField(javaClass, rasterizedGlyphs));
+        stats.discardedGlyphTiles = static_cast<decltype(stats.discardedGlyphTiles)>(
+            env->GetLongField(javaClass, discardedGlyphTiles));
+
+        env->DeleteLocalRef(cls);
+    }
+
+    static void ViewStatsFromCopy(JNIEnv *env, const Noesis::ViewStats &stats,
+                                  jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto frameTime = env->GetFieldID(cls, "frameTime", "F");
+        const auto updateTime = env->GetFieldID(cls, "updateTime", "F");
+        const auto renderTime = env->GetFieldID(cls, "renderTime", "F");
+        const auto triangles = env->GetFieldID(cls, "triangles", "J");
+        const auto draws = env->GetFieldID(cls, "draws", "J");
+        const auto batches = env->GetFieldID(cls, "batches", "J");
+        const auto tessellations = env->GetFieldID(cls, "tessellations", "J");
+        const auto flushes = env->GetFieldID(cls, "flushes", "J");
+        const auto geometrySize = env->GetFieldID(cls, "geometrySize", "J");
+        const auto masks = env->GetFieldID(cls, "masks", "J");
+        const auto opacities = env->GetFieldID(cls, "opacities", "J");
+        const auto renderTargetSwitches = env->GetFieldID(cls, "renderTargetSwitches", "J");
+        const auto uploadedRamps = env->GetFieldID(cls, "uploadedRamps", "J");
+        const auto rasterizedGlyphs = env->GetFieldID(cls, "rasterizedGlyphs", "J");
+        const auto discardedGlyphTiles = env->GetFieldID(cls, "discardedGlyphTiles", "J");
+
+        env->SetFloatField(javaClass, frameTime, stats.frameTime);
+        env->SetFloatField(javaClass, updateTime, stats.updateTime);
+        env->SetFloatField(javaClass, renderTime, stats.renderTime);
+        env->SetLongField(javaClass, triangles, stats.triangles);
+        env->SetLongField(javaClass, draws, stats.draws);
+        env->SetLongField(javaClass, batches, stats.batches);
+        env->SetLongField(javaClass, tessellations, stats.tessellations);
+        env->SetLongField(javaClass, flushes, stats.flushes);
+        env->SetLongField(javaClass, geometrySize, stats.geometrySize);
+        env->SetLongField(javaClass, masks, stats.masks);
+        env->SetLongField(javaClass, opacities, stats.opacities);
+        env->SetLongField(javaClass, renderTargetSwitches, stats.renderTargetSwitches);
+        env->SetLongField(javaClass, uploadedRamps, stats.uploadedRamps);
+        env->SetLongField(javaClass, rasterizedGlyphs, stats.rasterizedGlyphs);
+        env->SetLongField(javaClass, discardedGlyphTiles, stats.discardedGlyphTiles);
 
         env->DeleteLocalRef(cls);
     }
