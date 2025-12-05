@@ -8,6 +8,9 @@
 
 #include "NsDrawing/Int32Rect.h"
 #include "NsDrawing/Point.h"
+#include "NsDrawing/Rect.h"
+#include "NsDrawing/Thickness.h"
+#include "NsGui/IUITreeNode.h"
 #include "NsGui/IView.h"
 #include "NsMath/Matrix.h"
 #include "NsMath/Vector.h"
@@ -15,6 +18,9 @@
 
 
 namespace Noesis {
+    struct ObjectWithNameScope;
+    struct Thickness;
+    struct Rect;
     struct Vector2;
 }
 
@@ -445,6 +451,114 @@ public:
         env->SetLongField(javaClass, rasterizedGlyphs, stats.rasterizedGlyphs);
         env->SetLongField(javaClass, discardedGlyphTiles, stats.discardedGlyphTiles);
 
+        env->DeleteLocalRef(cls);
+    }
+
+    static void SizeFromCopy(JNIEnv *env, const Noesis::Size &stats,
+                                  jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto width = env->GetFieldID(cls, "width", "F");
+        const auto height = env->GetFieldID(cls, "height", "F");
+
+        env->SetFloatField(javaClass, width, stats.width);
+        env->SetFloatField(javaClass, height, stats.height);
+        env->DeleteLocalRef(cls);
+    }
+
+    static void SizeToCopy(JNIEnv *env, Noesis::Size &stats,
+                                  const jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto width = env->GetFieldID(cls, "width", "F");
+        const auto height = env->GetFieldID(cls, "height", "F");
+
+        stats.width = env->GetFloatField(javaClass, width);
+        stats.height = env->GetFloatField(javaClass, height);
+        env->DeleteLocalRef(cls);
+    }
+
+    static void RectFromCopy(JNIEnv *env, const Noesis::Rect &stats,
+                                  jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto x = env->GetFieldID(cls, "x", "F");
+        const auto y = env->GetFieldID(cls, "y", "F");
+        const auto width = env->GetFieldID(cls, "width", "F");
+        const auto height = env->GetFieldID(cls, "height", "F");
+
+        env->SetFloatField(javaClass, x, stats.x);
+        env->SetFloatField(javaClass, y, stats.y);
+        env->SetFloatField(javaClass, width, stats.width);
+        env->SetFloatField(javaClass, height, stats.height);
+        env->DeleteLocalRef(cls);
+    }
+
+    static void RectToCopy(JNIEnv *env, Noesis::Rect &stats,
+                                  const jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto x = env->GetFieldID(cls, "x", "F");
+        const auto y = env->GetFieldID(cls, "y", "F");
+        const auto width = env->GetFieldID(cls, "width", "F");
+        const auto height = env->GetFieldID(cls, "height", "F");
+
+        stats.x = env->GetFloatField(javaClass, x);
+        stats.y = env->GetFloatField(javaClass, y);
+        stats.width = env->GetFloatField(javaClass, width);
+        stats.height = env->GetFloatField(javaClass, height);
+        env->DeleteLocalRef(cls);
+    }
+
+    static void ThicknessFromCopy(JNIEnv *env, const Noesis::Thickness &stats,
+                              jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto x = env->GetFieldID(cls, "left", "F");
+        const auto y = env->GetFieldID(cls, "top", "F");
+        const auto width = env->GetFieldID(cls, "right", "F");
+        const auto height = env->GetFieldID(cls, "bottom", "F");
+
+        env->SetFloatField(javaClass, x, stats.left);
+        env->SetFloatField(javaClass, y, stats.top);
+        env->SetFloatField(javaClass, width, stats.right);
+        env->SetFloatField(javaClass, height, stats.bottom);
+        env->DeleteLocalRef(cls);
+    }
+
+    static void ThicknessToCopy(JNIEnv *env, Noesis::Thickness &stats,
+                                  const jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto x = env->GetFieldID(cls, "left", "F");
+        const auto y = env->GetFieldID(cls, "top", "F");
+        const auto width = env->GetFieldID(cls, "right", "F");
+        const auto height = env->GetFieldID(cls, "bottom", "F");
+
+        stats.left = env->GetFloatField(javaClass, x);
+        stats.top = env->GetFloatField(javaClass, y);
+        stats.right = env->GetFloatField(javaClass, width);
+        stats.bottom = env->GetFloatField(javaClass, height);
+        env->DeleteLocalRef(cls);
+    }
+
+
+    static void ObjectWithNameScopeFromCopy(JNIEnv *env, const Noesis::ObjectWithNameScope &stats,
+                              jobject javaClass) {
+        if (javaClass == nullptr) return;
+        const auto cls = env->GetObjectClass(javaClass);
+
+        const auto x = env->GetFieldID(cls, "object_ptr", "L");
+        const auto y = env->GetFieldID(cls, "object_ptr", "L");
+
+        env->SetLongField(javaClass, x, reinterpret_cast<jlong>(stats.object));
+        env->SetLongField(javaClass, y, reinterpret_cast<jlong>(stats.scope));
         env->DeleteLocalRef(cls);
     }
 };

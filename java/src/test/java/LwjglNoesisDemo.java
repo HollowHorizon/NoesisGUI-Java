@@ -161,40 +161,48 @@ public final class LwjglNoesisDemo {
         NoesisGui.loadApplicationResources(NSThemes.darkBlue());
 
         NSFrameworkElement data = NoesisGui.parseXaml("""
-                <Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-                         <Grid.Background>
-                           <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                             <GradientStop Offset="0" Color="#FF123F61"/>
-                             <GradientStop Offset="0.6" Color="#FF0E4B79"/>
-                             <GradientStop Offset="0.7" Color="#FF106097"/>
-                           </LinearGradientBrush>
-                         </Grid.Background>
-                
-                         <Viewbox>
-                           <StackPanel Margin="50">
-                             <!-- вот тут даём идентификатор -->
-                             <Button x:Name="HelloButton"
-                                     Content="Hello World!"
-                                     Margin="0,30,0,0"/>
-                             <Rectangle Height="5" Margin="-10,20,-10,0">
-                               <Rectangle.Fill>
-                                 <RadialGradientBrush>
-                                   <GradientStop Offset="0" Color="#40000000"/>
-                                   <GradientStop Offset="1" Color="#00000000"/>
-                                 </RadialGradientBrush>
-                               </Rectangle.Fill>
-                             </Rectangle>
-                           </StackPanel>
-                         </Viewbox>
-                       </Grid>
+<Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Главное меню -->
+    <Grid x:Name="MainMenuRoot">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+            <Button x:Name="PlayButton" Content="Play" Width="200" Margin="0,0,0,10"/>
+            <Button x:Name="SettingsButton" Content="Settings" Width="200" Margin="0,0,0,10"/>
+            <Button x:Name="ExitButton" Content="Exit" Width="200"/>
+        </StackPanel>
+    </Grid>
+
+    <!-- Окно настроек поверх -->
+    <Grid x:Name="SettingsRoot"
+          Background="#80000000"
+          Visibility="Collapsed">
+        <Border Width="400" Height="300" Background="#FF202020" CornerRadius="8"
+                HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Margin="20">
+                <TextBlock Text="Settings" FontSize="24" Margin="0,0,0,10"/>
+                <!-- тут всякие ползунки, чекбоксы -->
+                <Button x:Name="SettingsCloseButton"
+                        Content="Back"
+                        HorizontalAlignment="Right"
+                        Margin="0,20,0,0"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Grid>
                 """);
         _view = NoesisGui.createView(data);
         _view.setFlags(NSGui_RenderFlags.PPAA.value | NSGui_RenderFlags.LCD.value);
         _view.getRenderer().init(NSOpenGl.createDevice(false));
         _view.setSize(width, height);
 
-        NSEventHandlerManager.subscribe(_view, "HelloButton", (args) -> {
+        final NSFrameworkElement root = _view.getContent();
+
+        final var button = root.findName("SettingsButton");
+
+        NSEventHandlerManager.subscribe(_view, "SettingsButton", (args) -> {
+            args.getSource().castTo(NSUIElement::new).setVisibility(NSGui_Visibility.Visibility_Hidden);
+
             System.out.println(args.getRoutedEvent().getName());
         });
         // Здесь должен быть твой JNI-бинд:

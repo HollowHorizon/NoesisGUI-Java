@@ -13,10 +13,12 @@
 #include <NsGui/ResourceDictionary.h>
 
 #include "NsGui/FrameworkElement.h"
+#include "NsGui/Grid.h"
+#include "NsGui/IView.h"
 
 void test() {
 
-    // Noesis::GUI::LoadApplicationResources()
+
 
 
 }

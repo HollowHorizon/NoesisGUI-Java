@@ -337,7 +337,7 @@ public class NSUIElement extends NSVisual {
      * Translates a point relative to this element to coordinates of the specified element
      */
     public final void translatePoint(final NSPoint input, final NSPoint out, final NSUIElement element) {
-        nativeTranslatePoint(getPtr(), input, out, element);
+        nativeTranslatePoint(getPtr(), input, out, element.getPtr());
     }
 
     /**
@@ -684,7 +684,7 @@ public class NSUIElement extends NSVisual {
 
     private static native void nativeReleaseMouseCapture(long ptr);
 
-    private static native void nativeTranslatePoint(long ptr, NSPoint input, NSPoint out, NSUIElement element);
+    private static native void nativeTranslatePoint(long ptr, NSPoint input, NSPoint out, long element_ptr);
 
     private static native boolean nativeGetIsTapEnabled(long ptr);
 
