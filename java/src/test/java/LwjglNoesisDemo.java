@@ -4,9 +4,7 @@ import dev.sixik.noesisgui.nshandlers.NSEventHandlerManager;
 import dev.sixik.noesisgui_impl.NSThemes;
 import dev.sixik.noesisgui_ini.NoesisGuiJava;
 import dev.sixik.noesisgui_render.gl.NSOpenGl;
-import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GL11;
 
 import static dev.sixik.noesisgui.nsgui.NSGui_MouseButton.MouseButton_Left;
 import static org.lwjgl.glfw.GLFW.*;
@@ -198,13 +196,22 @@ public final class LwjglNoesisDemo {
 
         final NSFrameworkElement root = _view.getContent();
 
-        final var button = root.findName("SettingsButton");
+        final NSFrameworkElement mainMenu = root.findName("MainMenuRoot");
+        final NSFrameworkElement settings = root.findName("SettingsRoot");
+
+        mainMenu.setVisibility(NSGui_Visibility.Visible);
+        settings.setVisibility(NSGui_Visibility.Hidden);
 
         NSEventHandlerManager.subscribe(_view, "SettingsButton", (args) -> {
-            args.getSource().castTo(NSUIElement::new).setVisibility(NSGui_Visibility.Visibility_Hidden);
-
-            System.out.println(args.getRoutedEvent().getName());
+            mainMenu.setVisibility(NSGui_Visibility.Hidden);
+            settings.setVisibility(NSGui_Visibility.Visible);
         });
+
+        NSEventHandlerManager.subscribe(_view, "SettingsCloseButton", (arg) -> {
+            mainMenu.setVisibility(NSGui_Visibility.Visible);
+            settings.setVisibility(NSGui_Visibility.Hidden);
+        });
+
         // Здесь должен быть твой JNI-бинд:
         // - SetLogHandler
         // - SetLicense

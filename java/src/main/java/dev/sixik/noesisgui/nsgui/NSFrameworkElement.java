@@ -626,8 +626,8 @@ public class NSFrameworkElement extends NSUIElement{
         return new NSFrameworkElement(nGetStateGroupsRoot(getPtr()));
     }
 
-    public final NSBaseComponent findName(final String name) {
-        return new NSBaseComponent(nFindName(getPtr(), name));
+    public final NSFrameworkElement findName(final String name) {
+        return new NSFrameworkElement(nFindName(getPtr(), name));
     }
 
     public final NSObjectWithNameScope findNameAndScope(final String name) {

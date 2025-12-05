@@ -17,6 +17,14 @@ public class NSBaseObject {
         return ptr;
     }
 
+
+    /**
+     * Check is nullptr
+     */
+    public final boolean isNullPtr()  {
+        return ptr == 0;
+    }
+
     /**
      * For tracking alive objects
      */
