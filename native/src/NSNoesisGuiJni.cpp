@@ -10,12 +10,30 @@
 #include "NsMath/AABBox.h"
 #include <NsGui/ResourceDictionary.h>
 
+#include "jni.h"
 #include "App/Theme/Include/NsApp/ThemeProviders.h"
 #include "Render/GLRenderDevice/Include/NsRender/GLFactory.h"
 
+
+
 extern "C" {
 
+    JNIEXPORT void JNICALL
+    Java_dev_sixik_noesisgui_NoesisGui_nSetLicense(JNIEnv* env, jclass, jstring name, jstring key) {
+        const char *cstr = env->GetStringUTFChars(name, nullptr);
+        if (cstr == nullptr) {
+            return;
+        }
 
+        const char *cstr2 = env->GetStringUTFChars(key, nullptr);
+        if (cstr2 == nullptr) {
+            return;
+        }
+
+        Noesis::GUI::SetLicense(cstr, cstr2);
+        env->ReleaseStringUTFChars(name, cstr);
+        env->ReleaseStringUTFChars(key, cstr2);
+    }
 
     JNIEXPORT void JNICALL
     Java_dev_sixik_noesisgui_NoesisGui_nativeSetThemeProviders(JNIEnv* env, jclass) {
@@ -97,4 +115,109 @@ Java_dev_sixik_noesisgui_NoesisGui_nativeCreateView(JNIEnv* env, jclass, jlong e
         // но мы только что сделали AddReference(), так что объект остаётся жив.
         return reinterpret_cast<jlong>(ptr);
     }
+
+
+    struct NsLogHandler {
+        jobject handlerGlobal = nullptr;
+        jmethodID onLogMethod = nullptr;
+    };
+
+static NsLogHandler g_logHandler;
+
+JNIEXPORT void JNICALL
+Java_dev_sixik_noesisgui_NoesisGui_nSetLogHandler(
+        JNIEnv* env, jclass,
+        jobject jHandler) {
+
+    // 1. Убиваем старый глобальный ref (если был)
+    if (g_logHandler.handlerGlobal != nullptr) {
+        env->DeleteGlobalRef(g_logHandler.handlerGlobal);
+        g_logHandler.handlerGlobal = nullptr;
+        g_logHandler.onLogMethod = nullptr;
+    }
+
+    // Если передали null – просто выключаем логгер (или ставим дефолтный)
+    if (jHandler == nullptr) {
+        Noesis::GUI::SetLogHandler(nullptr);
+        return;
+    }
+
+    jclass handlerClass = env->GetObjectClass(jHandler);
+    if (handlerClass == nullptr) {
+        return; // что-то совсем странное
+    }
+
+    jmethodID onLogMethod = env->GetMethodID(
+        handlerClass,
+        "onLog",
+        "(Ljava/lang/String;JJLjava/lang/String;Ljava/lang/String;)V"
+    );
+    env->DeleteLocalRef(handlerClass);
+
+    if (onLogMethod == nullptr) {
+        // нет такого метода — можно кинуть исключение в Java, но минимум просто выйти
+        return;
+    }
+
+    g_logHandler.handlerGlobal = env->NewGlobalRef(jHandler);
+    g_logHandler.onLogMethod = onLogMethod;
+
+    // 2. Ставим log handler
+    Noesis::GUI::SetLogHandler([](const char* file,
+                                  uint32_t line,
+                                  uint32_t level,
+                                  const char* channel,
+                                  const char* msg) {
+        if (NoesisJava::g_vm == nullptr) return;
+
+        JNIEnv* env = nullptr;
+        bool attached = false;
+
+        jint res = NoesisJava::g_vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_8);
+        if (res == JNI_EDETACHED) {
+            if (NoesisJava::g_vm->AttachCurrentThread(reinterpret_cast<void**>(&env), nullptr) != JNI_OK) {
+                return;
+            }
+            attached = true;
+        } else if (res != JNI_OK) {
+            return;
+        }
+
+        // Если handler уже очищен — просто выходим
+        if (g_logHandler.handlerGlobal == nullptr || g_logHandler.onLogMethod == nullptr) {
+            if (attached) {
+                NoesisJava::g_vm->DetachCurrentThread();
+            }
+            return;
+        }
+
+        jstring jFile    = env->NewStringUTF(file    ? file    : "");
+        jstring jChannel = env->NewStringUTF(channel ? channel : "");
+        jstring jMsg     = env->NewStringUTF(msg     ? msg     : "");
+
+        env->CallVoidMethod(
+            g_logHandler.handlerGlobal,
+            g_logHandler.onLogMethod,
+            jFile,
+            static_cast<jlong>(line),
+            static_cast<jlong>(level),
+            jChannel,
+            jMsg
+        );
+
+        // Чистим локальные ссылки
+        env->DeleteLocalRef(jFile);
+        env->DeleteLocalRef(jChannel);
+        env->DeleteLocalRef(jMsg);
+
+        if (env->ExceptionCheck()) {
+            env->ExceptionDescribe();
+            env->ExceptionClear();
+        }
+
+        if (attached) {
+            NoesisJava::g_vm->DetachCurrentThread();
+        }
+    });
+}
 }

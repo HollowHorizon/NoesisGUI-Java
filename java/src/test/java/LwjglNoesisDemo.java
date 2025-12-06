@@ -153,10 +153,18 @@ public final class LwjglNoesisDemo {
     private void noesisInit() {
         NoesisGuiJava.Initialize();
 
+        NoesisGui.setLogHandler(((file, line, level, channel, message) -> {
+            System.out.println("[NOESIS] " + file + ":" + line + " [" + NoesisGui.getLogLevelName((int) level) + "] " + channel + " - " + message);
+        }));
+
+        NoesisGui.setLicense("GlobexCorporation", "0KrZJjrt2SYwlUcIzZMGor47iaWruwED83qFJSQR9QXgAKqQ");
+
         NoesisGui.init();
 
         NoesisGui.setThemeProviders();
         NoesisGui.loadApplicationResources(NSThemes.darkBlue());
+
+
 
         NSFrameworkElement data = NoesisGui.parseXaml("""
 <Grid xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -210,6 +218,10 @@ public final class LwjglNoesisDemo {
         NSEventHandlerManager.subscribe(_view, "SettingsCloseButton", (arg) -> {
             mainMenu.setVisibility(NSGui_Visibility.Visible);
             settings.setVisibility(NSGui_Visibility.Hidden);
+        });
+
+        NSEventHandlerManager.subscribe(_view, "ExitButton", (arg) -> {
+            root.setVisibility(NSGui_Visibility.Hidden);
         });
 
         // Здесь должен быть твой JNI-бинд:
