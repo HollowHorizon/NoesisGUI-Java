@@ -25,6 +25,8 @@ namespace Noesis {
     struct Vector2;
 }
 
+
+
 class NSJniUtils {
 public:
     static void Int32RectToCopy(JNIEnv *env, Noesis::Int32Rect &src, const jobject dst) {

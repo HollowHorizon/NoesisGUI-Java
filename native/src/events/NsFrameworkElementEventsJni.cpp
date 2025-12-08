@@ -11,6 +11,25 @@
 #include "NsGui/RoutedEvent.h"
 
 
+struct JniEnvScope {
+    JNIEnv* env = nullptr;
+    bool attached = false;
+
+    JniEnvScope(JavaVM* vm) {
+        jint res = vm->GetEnv((void**)&env, JNI_VERSION_1_8);
+        if (res == JNI_EDETACHED) {
+            if (vm->AttachCurrentThread((void**)&env, nullptr) == 0) {
+                attached = true;
+            }
+        }
+    }
+
+    ~JniEnvScope() {
+    }
+
+    operator JNIEnv*() const { return env; }
+};
+
 extern "C" {
 JNIEXPORT void JNICALL
 Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nContextMenuClosing(JNIEnv *env, jclass,
@@ -42,18 +61,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nContextMenuClosing(JNIEnv *en
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -80,8 +90,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nContextMenuClosing(JNIEnv *en
 
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
-
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -116,18 +124,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nContextMenuOpening(JNIEnv *en
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -155,7 +154,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nContextMenuOpening(JNIEnv *en
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -190,18 +188,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nLoaded(JNIEnv *env, jclass,
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -226,7 +215,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nLoaded(JNIEnv *env, jclass,
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -256,23 +244,14 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nUnloaded(JNIEnv *env, jclass,
         return;
     }
 
-    element->Loaded() += [data](Noesis::BaseComponent* sender,
+    element->Unloaded() += [data](Noesis::BaseComponent* sender,
                                         const Noesis::RoutedEventArgs& args) {
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -297,7 +276,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nUnloaded(JNIEnv *env, jclass,
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -332,18 +310,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nReloaded(JNIEnv *env, jclass,
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -368,7 +337,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nReloaded(JNIEnv *env, jclass,
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -403,18 +371,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nRequestBringIntoView(JNIEnv *
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -441,7 +400,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nRequestBringIntoView(JNIEnv *
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -475,18 +433,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nSizeChanged(JNIEnv *env, jcla
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -515,7 +464,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nSizeChanged(JNIEnv *env, jcla
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -549,18 +497,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nToolTipClosing(JNIEnv *env, j
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -585,7 +524,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nToolTipClosing(JNIEnv *env, j
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -619,18 +557,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nToolTipOpening(JNIEnv *env, j
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.source_ptr        = reinterpret_cast<jlong>(args.source);
@@ -655,7 +584,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nToolTipOpening(JNIEnv *env, j
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -689,18 +617,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nDataContextChanged(JNIEnv *en
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         auto& rg = data->args;
         rg.prop_ptr       = reinterpret_cast<jlong>(args.prop);
@@ -725,7 +644,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nDataContextChanged(JNIEnv *en
         env->DeleteLocalRef(javaComponent);
         env->DeleteLocalRef(javaArgs);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -759,18 +677,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nInitialized(JNIEnv *env, jcla
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         jobject javaComponent = NSJavaUtils::createBaseObject(env, sender);
         env->CallVoidMethod(
@@ -786,7 +695,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nInitialized(JNIEnv *env, jcla
 
         env->DeleteLocalRef(javaComponent);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 
@@ -819,18 +727,9 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nAncestorChanged(JNIEnv *env, 
         if (NoesisJava::g_vm == nullptr || data == nullptr)
             return;
 
-        JNIEnv *env = nullptr;
-        bool attached = false;
-
-        jint res = NoesisJava::g_vm->GetEnv((void**)&env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (NoesisJava::g_vm->AttachCurrentThread((void**)&env, nullptr) != 0) {
-                return;
-            }
-            attached = true;
-        } else if (res != JNI_OK) {
-            return;
-        }
+        const JniEnvScope envScope(NoesisJava::g_vm);
+        JNIEnv* env = envScope;
+        if (!env) return;
 
         jobject javaComponent = NSJavaUtils::createBaseObject(env, sender);
         env->CallVoidMethod(
@@ -846,7 +745,6 @@ Java_dev_sixik_noesisgui_nsgui_NSFrameworkElement_nAncestorChanged(JNIEnv *env, 
 
         env->DeleteLocalRef(javaComponent);
 
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
     };
 }
 }
