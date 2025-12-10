@@ -51,7 +51,7 @@ public class NoesisGui {
      * A UI element created from XAML code.<br><br>
      *
      * <p><strong>Warning:</strong> Lifetime management of this object is entirely your responsibility.
-     * When you no longer need this element, call {@link NSBaseComponent#destroy()} to correctly
+     * When you no longer need this element, call {@link NSBaseComponent#release()} to correctly
      * release the underlying native resources.</p>
      */
     public static NSFrameworkElement parseXaml(final String xamlCode) {

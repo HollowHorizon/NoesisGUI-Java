@@ -85,6 +85,15 @@ add_library(noesis_jni SHARED
         src/NsGui/NSPanelJni.cpp
         src/NsGui/NSGridJni.cpp
         src/NsGui/NSBaseButtonJni.cpp
+        src/NsGui/NSBrushJni.cpp
+        src/NsGui/NSSolidColorBrushJni.cpp
+        src/NsGui/NSBrushesJni.cpp
+        src/NsGui/NSGradientBrushJni.cpp
+        src/NsGui/NSLinearGradientBrushJni.cpp
+        src/NsGui/NSRadialGradientBrushJni.cpp
+        src/NsGui/NSTileBrushJni.cpp
+        src/NsGui/NSVisualBrushJni.cpp
+        src/NsGui/NSImageBrushJni.cpp
 )
 
 # Линкуемся по .lib

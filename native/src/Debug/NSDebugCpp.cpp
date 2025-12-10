@@ -2,23 +2,19 @@
 // Created by Sixik on 04.12.2025.
 //
 
-#include <jni.h>
-#include <jni_md.h>
-
-#include "Render/GLRenderDevice/Include/NsRender/GLFactory.h"
-#include <App/Theme/Include/NsApp/ThemeApi.h>
-#include <App/Theme/Include/NsApp/ThemeProviders.h>
-
-#include "NsGui/IntegrationAPI.h"
-#include <NsGui/ResourceDictionary.h>
-
-#include "NsGui/BaseButton.h"
 #include "NsGui/FrameworkElement.h"
-#include "NsGui/Grid.h"
-#include "NsGui/IView.h"
+#include "NsGui/GradientBrush.h"
+#include "NsGui/LinearGradientBrush.h"
+#include "NsGui/SolidColorBrush.h"
+#include "NsGui/TileBrush.h"
+#include "NsGui/VisualBrush.h"
+
+namespace Noesis {
+    class VisualBrush;
+}
 
 void test() {
-
+    Noesis::VisualBrush* linear_gradient_brush = new Noesis::VisualBrush();
 
 }
 

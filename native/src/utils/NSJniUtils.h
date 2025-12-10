@@ -8,6 +8,7 @@
 #include <optional>
 #include <string>
 
+#include "NsDrawing/Color.h"
 #include "NsDrawing/Int32Rect.h"
 #include "NsDrawing/Point.h"
 #include "NsDrawing/Rect.h"
@@ -584,6 +585,36 @@ public:
 
         env->SetLongField(javaClass, x, reinterpret_cast<jlong>(stats.object));
         env->SetLongField(javaClass, y, reinterpret_cast<jlong>(stats.scope));
+        env->DeleteLocalRef(cls);
+    }
+
+    static void ColorToCopy(JNIEnv *env, Noesis::Color &src, const jobject dst) {
+        const jclass cls = env->GetObjectClass(dst);
+        const jfieldID xField = env->GetFieldID(cls, "r", "F");
+        const jfieldID yField = env->GetFieldID(cls, "g", "F");
+        const jfieldID zField = env->GetFieldID(cls, "b", "F");
+        const jfieldID aField = env->GetFieldID(cls, "a", "F");
+
+        src.r = env->GetFloatField(dst, xField);
+        src.g = env->GetFloatField(dst, yField);
+        src.b = env->GetFloatField(dst, zField);
+        src.a = env->GetFloatField(dst, aField);
+
+        env->DeleteLocalRef(cls);
+    }
+
+    static void ColorFromCopy(JNIEnv *env, const Noesis::Color &src, jobject dst) {
+        const jclass cls = env->GetObjectClass(dst);
+        const jfieldID xField = env->GetFieldID(cls, "r", "F");
+        const jfieldID yField = env->GetFieldID(cls, "g", "F");
+        const jfieldID zField = env->GetFieldID(cls, "b", "F");
+        const jfieldID aField = env->GetFieldID(cls, "a", "F");
+
+        env->SetFloatField(dst, xField, src.r);
+        env->SetFloatField(dst, yField, src.g);
+        env->SetFloatField(dst, zField, src.b);
+        env->SetFloatField(dst, aField, src.a);
+
         env->DeleteLocalRef(cls);
     }
 
