@@ -79,6 +79,7 @@ add_library(noesis_jni SHARED
         src/utils/NSJavaUtils.h
         src/events/NsFrameworkElementEventsJni.cpp
         src/events/NsUIElementEventsJni.cpp
+        src/NsGui/NsControlJni.cpp
 )
 
 # Линкуемся по .lib
