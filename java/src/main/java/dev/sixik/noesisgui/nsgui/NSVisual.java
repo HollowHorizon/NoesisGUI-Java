@@ -8,8 +8,9 @@ import dev.sixik.noesisgui.nsrenderer.NSRenderTreeUpdater;
 /**
  * Provides rendering support, which includes hit testing, coordinate transformation, and bounding
  * box calculations.
- * <p>
- * http://msdn.microsoft.com/en-us/library/system.windows.media.visual.aspx
+ *
+ * @see <a href="http://msdn.microsoft.com/en-us/library/system.windows.media.visual.aspx">
+ *      Microsoft Documentation: Visual Class</a>
  */
 public class NSVisual extends NSDependencyObject {
 

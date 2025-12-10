@@ -6,8 +6,17 @@ import dev.sixik.noesisgui.nsdrawing.NSRect;
 import dev.sixik.noesisgui.nsdrawing.NSSize;
 import dev.sixik.noesisgui.nshandlers.*;
 
-import java.nio.file.Files;
-
+/**
+ * Provides a starting point for element layout characteristics, and also exposes virtual methods
+ * that derived classes can override, which can influence the layout rendering behavior of the
+ * element and its child elements.
+ * <p>
+ * Much of the input (keyboard, mouse and touch) and focusing behavior for elements in general is
+ * also defined in the UIElement class.
+ *
+ * @see <a href="http://msdn.microsoft.com/en-us/library/system.windows.uielement.aspx">
+ *      Microsoft Documentation: UIElement Class</a>
+ */
 public class NSUIElement extends NSVisual {
 
     public NSUIElement(long ptr) {

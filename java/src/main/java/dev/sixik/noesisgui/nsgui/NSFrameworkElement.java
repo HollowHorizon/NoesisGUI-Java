@@ -4,6 +4,22 @@ import dev.sixik.noesisgui.nscore.*;
 import dev.sixik.noesisgui.nsdrawing.NSRect;
 import dev.sixik.noesisgui.nshandlers.*;
 
+/**
+ * Provides GUI framework-level features for user interface elements.
+ * <p>
+ * FrameworkElement extends UIElement and adds the following capabilities:
+ * <ul>
+ *   <li>Layout system definition</li>
+ *   <li>The logical tree</li>
+ *   <li>Object lifetime events</li>
+ *   <li>Support for data binding and dynamic resource references</li>
+ *   <li>Styles</li>
+ *   <li>More animation support</li>
+ * </ul>
+ *
+ * @see <a href="http://msdn.microsoft.com/en-us/library/system.windows.frameworkelement.aspx">
+ *      Microsoft Documentation: FrameworkElement Class</a>
+ */
 public class NSFrameworkElement extends NSUIElement{
 
     public NSFrameworkElement(long ptr) {

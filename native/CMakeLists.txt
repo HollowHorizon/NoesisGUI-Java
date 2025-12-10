@@ -81,6 +81,7 @@ add_library(noesis_jni SHARED
         src/events/NsUIElementEventsJni.cpp
         src/NsGui/NsControlJni.cpp
         src/NsGui/NsContentControlJni.cpp
+        src/NsGui/NSItemContainerGeneratorJni.cpp
 )
 
 # Линкуемся по .lib

@@ -8,6 +8,8 @@
 #include "../utils/NSJavaUtils.h"
 #include "../utils/NSJniUtils.h"
 #include "NsDrawing/Rect.h"
+#include "NsGui/INotifyCollectionChanged.h"
+#include "NsGui/ItemContainerGenerator.h"
 
 namespace NoesisJava {
     struct JavaDefault {
@@ -155,6 +157,15 @@ namespace NoesisJava {
     };
 
     struct JavaNSEventHandler : JavaMethodHandler {
+        struct JavaNSEventHandlerArgs : JavaDefault {
+            virtual ~JavaNSEventHandlerArgs() = default;
+
+            jobject Create(JNIEnv *env) override {
+                return nullptr;
+            };
+        };
+
+        JavaNSEventHandlerArgs args = {};
     };
 
     struct JavaNSInputEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
@@ -408,6 +419,32 @@ namespace NoesisJava {
         };
 
         JavaNSDragEventArgs args = {};
+    };
+
+    struct JavaNSItemsChangedEventHandler :  JavaMethodHandler {
+        struct JavaNSItemsChangedEventArgs : JavaDefault {
+            virtual ~JavaNSItemsChangedEventArgs() = default;
+
+            Noesis::ItemsChangedEventArgs args = Noesis::ItemsChangedEventArgs(
+                Noesis::NotifyCollectionChangedAction::NotifyCollectionChangedAction_Add,
+                Noesis::GeneratorPosition(), Noesis::GeneratorPosition(), 0, 0
+                );
+
+            jobject Create(JNIEnv *env) override {
+                return NSJavaUtils::createObject(env,
+             "dev/sixik/noesisgui/nsgui/NSItemsChangedEventArgs",
+             "(IIIIIII)V",
+             args.action,
+             args.position.index,
+             args.position.offset,
+             args.oldPosition.index,
+             args.oldPosition.offset,
+             args.itemCount,
+             args.itemUICount);
+            }
+        };
+
+        JavaNSItemsChangedEventArgs args = {};
     };
 
     template <typename JavaArgsType>

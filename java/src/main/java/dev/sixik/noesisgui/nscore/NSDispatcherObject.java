@@ -1,5 +1,16 @@
 package dev.sixik.noesisgui.nscore;
 
+/**
+ * Represents an object with thread affinity.
+ * <p>
+ * This object can be accessed only from the thread on which it was created. Subclasses of
+ * DispatcherObject that need to enforce thread safety can do so by calling {@code VerifyAccess} on all
+ * public methods. This guarantees the calling thread is the thread that the DispatcherObject was
+ * created on.
+ *
+ * @see <a href="https://msdn.microsoft.com/en-us/library/system.windows.threading.dispatcherobject.aspx">
+ *      Microsoft Documentation: DispatcherObject Class</a>
+ */
 public class NSDispatcherObject extends NSBaseComponent{
 
     public NSDispatcherObject(long ptr) {

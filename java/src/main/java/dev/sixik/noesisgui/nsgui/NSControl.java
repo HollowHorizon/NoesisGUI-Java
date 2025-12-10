@@ -2,6 +2,16 @@ package dev.sixik.noesisgui.nsgui;
 
 import dev.sixik.noesisgui.nshandlers.NSMouseButtonEventHandler;
 
+/**
+ * Represents the base class for all user interactive elements.
+ * <p>
+ * This class provides common functionality, properties, and behaviors for all controls
+ * in the user interface framework.
+ *
+ * @see <a href="http://msdn.microsoft.com/en-us/library/system.windows.controls.control.aspx">
+ *      Microsoft Documentation: Control Class</a>
+ * @since 1.0
+ */
 public class NSControl extends NSFrameworkElement {
 
     public NSControl(long ptr) {

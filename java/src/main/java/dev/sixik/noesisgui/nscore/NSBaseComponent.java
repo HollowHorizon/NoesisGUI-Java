@@ -3,6 +3,9 @@ package dev.sixik.noesisgui.nscore;
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Function;
 
+/**
+ * Base class for components
+ */
 public class NSBaseComponent extends NSBaseRefCounted {
 
     public NSBaseComponent(long ptr) {
