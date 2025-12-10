@@ -83,6 +83,7 @@ add_library(noesis_jni SHARED
         src/NsGui/NsContentControlJni.cpp
         src/NsGui/NSItemContainerGeneratorJni.cpp
         src/NsCore/NSPanelJni.cpp
+        src/NsCore/NSGridJni.cpp
 )
 
 # Линкуемся по .lib

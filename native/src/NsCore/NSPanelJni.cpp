@@ -16,6 +16,7 @@ extern "C" {
             }
             return nullptr;
         }
+
         return reinterpret_cast<Noesis::Panel *>(handle);
     }
 
