@@ -12,12 +12,12 @@
 #include "NsGui/IntegrationAPI.h"
 #include <NsGui/ResourceDictionary.h>
 
+#include "NsGui/BaseButton.h"
 #include "NsGui/FrameworkElement.h"
 #include "NsGui/Grid.h"
 #include "NsGui/IView.h"
 
 void test() {
-    Noesis::FrameworkElement element;
 
 
 }

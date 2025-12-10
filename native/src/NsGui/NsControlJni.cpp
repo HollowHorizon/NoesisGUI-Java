@@ -9,26 +9,6 @@
 #include "../utils/NSJniUtils.h"
 #include "NsGui/Control.h"
 
-struct JniEnvScope {
-    JNIEnv *env = nullptr;
-    bool attached = false;
-
-    JniEnvScope(JavaVM *vm) {
-        const jint res = vm->GetEnv((void **) &env, JNI_VERSION_1_8);
-        if (res == JNI_EDETACHED) {
-            if (vm->AttachCurrentThread((void **) &env, nullptr) == 0) {
-                attached = true;
-            }
-        }
-    }
-
-    ~JniEnvScope() {
-        if (attached) NoesisJava::g_vm->DetachCurrentThread();
-    }
-
-    operator JNIEnv *() const { return env; }
-};
-
 namespace NoesisJava {
     template<typename EventType, typename JavaArgsType, typename EventAdderType, typename ArgsFillerType>
     void RegisterEventHandler(JNIEnv *env, jlong elementPtr, jobject jListener,
