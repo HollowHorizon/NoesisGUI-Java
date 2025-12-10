@@ -26,18 +26,15 @@ extern "C" {
     }
 
     JNIEXPORT void JNICALL
-    Java_dev_sixik_noesisgui_nscore_NSBaseComponent_nativeDestroy(JNIEnv* env, jobject thiz) {
-        jclass cls = env->GetObjectClass(thiz);
-        jfieldID ptrField = env->GetFieldID(cls, "ptr", "J");
-
-        jlong ptrVal = env->GetLongField(thiz, ptrField);
-        auto* comp = reinterpret_cast<Noesis::BaseComponent*>(ptrVal);
-
+    Java_dev_sixik_noesisgui_nscore_NSBaseComponent_nativeDestroy(JNIEnv* env, jclass, jlong ptr) {
+        auto* comp = reinterpret_cast<Noesis::BaseComponent*>(ptr);
         if (comp != nullptr) {
             comp->Release();
-            env->SetLongField(thiz, ptrField, 0);
+        } else {
+            jclass excCls = env->FindClass("java/lang/IllegalStateException");
+            if (excCls != nullptr) {
+                env->ThrowNew(excCls, "Can't free memory, because object not found!");
+            }
         }
-
-        env->DeleteLocalRef(cls);
     }
 }

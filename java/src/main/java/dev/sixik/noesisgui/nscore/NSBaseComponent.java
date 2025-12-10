@@ -17,7 +17,7 @@ public class NSBaseComponent extends NSBaseRefCounted {
      * does not have the ability to manage the object.
      */
     public void destroy() {
-        nativeDestroy();
+        nativeDestroy(getPtr());
     }
 
     public final <T extends NSBaseComponent> T castTo(Function<Long, T> constructor) {
@@ -28,5 +28,5 @@ public class NSBaseComponent extends NSBaseRefCounted {
         return castClass.getConstructor(long.class).newInstance(getPtr());
     }
 
-    private native void nativeDestroy();
+    protected static native void nativeDestroy(long ptr);
 }
