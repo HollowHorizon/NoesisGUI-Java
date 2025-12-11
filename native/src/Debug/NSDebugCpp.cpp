@@ -8,6 +8,7 @@
 #include "NsGui/LinearGradientBrush.h"
 #include "NsGui/SolidColorBrush.h"
 #include "NsGui/TileBrush.h"
+#include "NsGui/ToggleButton.h"
 #include "NsGui/VisualBrush.h"
 
 namespace Noesis {

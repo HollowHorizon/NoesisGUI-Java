@@ -2,6 +2,12 @@ package dev.sixik.noesisgui.nsgui;
 
 import dev.sixik.noesisgui.nscore.NSBaseComponent;
 
+/**
+ * Represents a control with a single piece of content.
+ *
+ * @see <a href="http://msdn.microsoft.com/en-us/library/system.windows.controls.contentcontrol.aspx">
+ *      Microsoft Documentation: ContentControl Class</a>
+ */
 public class NSContentControl extends NSControl{
 
     public NSContentControl(long ptr) {

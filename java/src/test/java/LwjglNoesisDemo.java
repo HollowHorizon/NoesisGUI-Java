@@ -4,6 +4,7 @@ import dev.sixik.noesisgui.nsdrawing.NSPoint;
 import dev.sixik.noesisgui.nsgui.*;
 import dev.sixik.noesisgui.nshandlers.NSEventHandlerManager;
 import dev.sixik.noesisgui_impl.NSThemes;
+import dev.sixik.noesisgui_impl.NoesisGuiWidgets;
 import dev.sixik.noesisgui_ini.KeyValueParser;
 import dev.sixik.noesisgui_ini.NoesisGuiJava;
 import dev.sixik.noesisgui_render.gl.NSOpenGl;
@@ -220,7 +221,13 @@ public final class LwjglNoesisDemo {
         root.setBackground(brush);
         root.setMargin(new NSThickness(50, 0, 0, 10));
 
+        NSButton button = new NSButton();
+        button.setName("Fobos");
+        button.setContent("Fobos Name");
+        button.setWidth(256);
+        button.setHeight(48);
 
+        root.getChildren().add(button);
 
         return root;
     }

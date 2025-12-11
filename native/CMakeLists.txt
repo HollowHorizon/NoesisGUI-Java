@@ -99,6 +99,13 @@ add_library(noesis_jni SHARED
         NoesisSDK/Packages/Render/GLRenderDevice/Src/GLRenderDevice.cpp
         src/NsGui/NSGradientStopCollectionJni.cpp
         src/NsGui/NSGradientStopJni.cpp
+        src/NsGui/NSButtonJni.cpp
+        src/NsGui/NSUIElementCollectionJni.cpp
+        src/NsGui/NSToggleButtonJni.cpp
+        src/NsGui/NSRadioButtonJni.cpp
+        src/NsGui/NSCheckBoxJni.cpp
+        src/NsGui/NSRepeatButtonJni.cpp
+        src/NsGui/NSGridViewColumnHeaderJni.cpp
 )
 
 # Линкуемся по .lib
