@@ -107,6 +107,13 @@ add_library(noesis_jni SHARED
         src/NsGui/NSRepeatButtonJni.cpp
         src/NsGui/NSGridViewColumnHeaderJni.cpp
         src/NsGui/NSToolTipJni.cpp
+        src/NsGui/NSLabelJni.cpp
+        src/NsGui/NSUserControlJni.cpp
+        src/NsGui/NSPageJni.cpp
+        src/NsGui/NSStatusBarItemJni.cpp
+        src/NsGui/NSBaseTextBoxJni.cpp
+        src/NsGui/NSTypographyJni.cpp
+        src/NsGui/NSTextBoxJni.cpp
 )
 
 # Линкуемся по .lib

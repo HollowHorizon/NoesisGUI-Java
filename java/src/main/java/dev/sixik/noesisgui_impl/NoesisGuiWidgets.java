@@ -31,4 +31,24 @@ public class NoesisGuiWidgets {
     public static NSToolTip toolTip() {
         return new NSToolTip();
     }
+
+    public static NSLabel label() {
+        return new NSLabel();
+    }
+
+    public static NSUserControl userControl() {
+        return new NSUserControl();
+    }
+
+    public static NSPage page() {
+        return new NSPage();
+    }
+
+    public static NSStatusBarItem statusBarItem() {
+        return new NSStatusBarItem();
+    }
+
+    public static NSTextBox textBox() {
+        return new NSTextBox();
+    }
 }

@@ -13,8 +13,10 @@
 #include "NsDrawing/Point.h"
 #include "NsDrawing/Rect.h"
 #include "NsDrawing/Thickness.h"
+#include "NsGui/CompositionUnderline.h"
 #include "NsGui/IUITreeNode.h"
 #include "NsGui/IView.h"
+#include "NsGui/Typography.h"
 #include "NsMath/Matrix.h"
 #include "NsMath/Vector.h"
 #include "NsRender/RenderDevice.h"
@@ -646,6 +648,353 @@ public:
         env->DeleteLocalRef(clazz);
 
         return obj;
+    }
+
+    static void TypographyFromCopy(JNIEnv *env, const Noesis::Typography typo, jobject target) {
+        jclass cls = env->GetObjectClass(target);
+    if (cls == nullptr) return;
+
+    jmethodID mid = env->GetMethodID(
+            cls,
+            "applyFromNativeData",
+            "(JIIZZZZIZZIIIZZZZIIZZIIZZZZZZZZZZZZZZZZZZZZI)V"
+    );
+    env->DeleteLocalRef(cls);
+
+    if (mid == nullptr) {
+        return;
+    }
+
+    jint annotationAlternates      = typo.GetAnnotationAlternates();
+    jint capitalsOrdinal           = static_cast<jint>(typo.GetCapitals());
+    jboolean capitalSpacing        = typo.GetCapitalSpacing() ? JNI_TRUE : JNI_FALSE;
+    jboolean caseSensitiveForms    = typo.GetCaseSensitiveForms() ? JNI_TRUE : JNI_FALSE;
+    jboolean contextualAlternates  = typo.GetContextualAlternates() ? JNI_TRUE : JNI_FALSE;
+    jboolean contextualLigatures   = typo.GetContextualLigatures() ? JNI_TRUE : JNI_FALSE;
+    jint contextualSwashes         = typo.GetContextualSwashes();
+    jboolean discretionaryLigatures= typo.GetDiscretionaryLigatures() ? JNI_TRUE : JNI_FALSE;
+    jboolean eastAsianExpertForms  = typo.GetEastAsianExpertForms() ? JNI_TRUE : JNI_FALSE;
+    jint eastAsianLanguageOrdinal  = static_cast<jint>(typo.GetEastAsianLanguage());
+    jint eastAsianWidthsOrdinal    = static_cast<jint>(typo.GetEastAsianWidths());
+    jint fractionOrdinal           = static_cast<jint>(typo.GetFraction());
+    jboolean historicalForms       = typo.GetHistoricalForms() ? JNI_TRUE : JNI_FALSE;
+    jboolean historicalLigatures   = typo.GetHistoricalLigatures() ? JNI_TRUE : JNI_FALSE;
+    jboolean kerning               = typo.GetKerning() ? JNI_TRUE : JNI_FALSE;
+    jboolean mathematicalGreek     = typo.GetMathematicalGreek() ? JNI_TRUE : JNI_FALSE;
+    jint numeralAlignmentOrdinal   = static_cast<jint>(typo.GetNumeralAlignment());
+    jint numeralStyleOrdinal       = static_cast<jint>(typo.GetNumeralStyle());
+    jboolean slashedZero           = typo.GetSlashedZero() ? JNI_TRUE : JNI_FALSE;
+    jboolean standardLigatures     = typo.GetStandardLigatures() ? JNI_TRUE : JNI_FALSE;
+    jint standardSwashes           = typo.GetStandardSwashes();
+    jint stylisticAlternates       = typo.GetStylisticAlternates();
+
+    jboolean stylisticSet1  = typo.GetStylisticSet1()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet2  = typo.GetStylisticSet2()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet3  = typo.GetStylisticSet3()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet4  = typo.GetStylisticSet4()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet5  = typo.GetStylisticSet5()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet6  = typo.GetStylisticSet6()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet7  = typo.GetStylisticSet7()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet8  = typo.GetStylisticSet8()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet9  = typo.GetStylisticSet9()  ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet10 = typo.GetStylisticSet10() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet11 = typo.GetStylisticSet11() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet12 = typo.GetStylisticSet12() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet13 = typo.GetStylisticSet13() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet14 = typo.GetStylisticSet14() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet15 = typo.GetStylisticSet15() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet16 = typo.GetStylisticSet16() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet17 = typo.GetStylisticSet17() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet18 = typo.GetStylisticSet18() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet19 = typo.GetStylisticSet19() ? JNI_TRUE : JNI_FALSE;
+    jboolean stylisticSet20 = typo.GetStylisticSet20() ? JNI_TRUE : JNI_FALSE;
+
+    jint variantsOrdinal = static_cast<jint>(typo.GetVariants());
+
+    env->CallVoidMethod(
+            target,
+            mid,
+            annotationAlternates,
+            capitalsOrdinal,
+            capitalSpacing,
+            caseSensitiveForms,
+            contextualAlternates,
+            contextualLigatures,
+            contextualSwashes,
+            discretionaryLigatures,
+            eastAsianExpertForms,
+            eastAsianLanguageOrdinal,
+            eastAsianWidthsOrdinal,
+            fractionOrdinal,
+            historicalForms,
+            historicalLigatures,
+            kerning,
+            mathematicalGreek,
+            numeralAlignmentOrdinal,
+            numeralStyleOrdinal,
+            slashedZero,
+            standardLigatures,
+            standardSwashes,
+            stylisticAlternates,
+            stylisticSet1,
+            stylisticSet2,
+            stylisticSet3,
+            stylisticSet4,
+            stylisticSet5,
+            stylisticSet6,
+            stylisticSet7,
+            stylisticSet8,
+            stylisticSet9,
+            stylisticSet10,
+            stylisticSet11,
+            stylisticSet12,
+            stylisticSet13,
+            stylisticSet14,
+            stylisticSet15,
+            stylisticSet16,
+            stylisticSet17,
+            stylisticSet18,
+            stylisticSet19,
+            stylisticSet20,
+            variantsOrdinal
+    );
+    }
+
+    static jint EnumOrdinal(JNIEnv* env, jobject enumObj) {
+        if (enumObj == nullptr) return 0;
+
+        jclass enumCls = env->GetObjectClass(enumObj);
+        if (enumCls == nullptr) return 0;
+
+        jmethodID ordinalMid = env->GetMethodID(enumCls, "ordinal", "()I");
+        env->DeleteLocalRef(enumCls);
+
+        if (ordinalMid == nullptr) return 0;
+
+        return env->CallIntMethod(enumObj, ordinalMid);
+    }
+
+    static void TypographyToCopy(JNIEnv* env, Noesis::Typography typo, jobject jTypography) {
+        if (jTypography == nullptr) return;
+
+        jclass cls = env->GetObjectClass(jTypography);
+        if (cls == nullptr) return;
+
+        // --- Утилита для поиска методов ---
+        auto getBool = [&](const char* name) -> jboolean {
+            jmethodID mid = env->GetMethodID(cls, name, "()Z");
+            if (mid == nullptr) return JNI_FALSE;
+            return env->CallBooleanMethod(jTypography, mid);
+        };
+
+        auto getInt = [&](const char* name) -> jint {
+            jmethodID mid = env->GetMethodID(cls, name, "()I");
+            if (mid == nullptr) return 0;
+            return env->CallIntMethod(jTypography, mid);
+        };
+
+        auto getEnumOrdinal = [&](const char* name, const char* sig) -> jint {
+            jmethodID mid = env->GetMethodID(cls, name, sig);
+            if (mid == nullptr) return 0;
+            jobject enumObj = env->CallObjectMethod(jTypography, mid);
+            jint ord = EnumOrdinal(env, enumObj);
+            env->DeleteLocalRef(enumObj);
+            return ord;
+        };
+
+        jint annotationAlternates     = getInt("getAnnotationAlternates");
+        jboolean capitalSpacing       = getBool("isCapitalSpacing");
+        jboolean caseSensitiveForms   = getBool("isCaseSensitiveForms");
+        jboolean contextualAlternates = getBool("isContextualAlternates");
+        jboolean contextualLigatures  = getBool("isContextualLigatures");
+        jint contextualSwashes        = getInt("getContextualSwashes");
+        jboolean discretionaryLigatures = getBool("isDiscretionaryLigatures");
+        jboolean eastAsianExpertForms   = getBool("isEastAsianExpertForms");
+        jboolean historicalForms        = getBool("isHistoricalForms");
+        jboolean historicalLigatures    = getBool("isHistoricalLigatures");
+        jboolean kerning                = getBool("isKerning");
+        jboolean mathematicalGreek      = getBool("isMathematicalGreek");
+        jboolean slashedZero            = getBool("isSlashedZero");
+        jboolean standardLigatures      = getBool("isStandardLigatures");
+        jint standardSwashes            = getInt("getStandardSwashes");
+        jint stylisticAlternates        = getInt("getStylisticAlternates");
+
+        jboolean stylisticSet1  = getBool("isStylisticSet1");
+        jboolean stylisticSet2  = getBool("isStylisticSet2");
+        jboolean stylisticSet3  = getBool("isStylisticSet3");
+        jboolean stylisticSet4  = getBool("isStylisticSet4");
+        jboolean stylisticSet5  = getBool("isStylisticSet5");
+        jboolean stylisticSet6  = getBool("isStylisticSet6");
+        jboolean stylisticSet7  = getBool("isStylisticSet7");
+        jboolean stylisticSet8  = getBool("isStylisticSet8");
+        jboolean stylisticSet9  = getBool("isStylisticSet9");
+        jboolean stylisticSet10 = getBool("isStylisticSet10");
+        jboolean stylisticSet11 = getBool("isStylisticSet11");
+        jboolean stylisticSet12 = getBool("isStylisticSet12");
+        jboolean stylisticSet13 = getBool("isStylisticSet13");
+        jboolean stylisticSet14 = getBool("isStylisticSet14");
+        jboolean stylisticSet15 = getBool("isStylisticSet15");
+        jboolean stylisticSet16 = getBool("isStylisticSet16");
+        jboolean stylisticSet17 = getBool("isStylisticSet17");
+        jboolean stylisticSet18 = getBool("isStylisticSet18");
+        jboolean stylisticSet19 = getBool("isStylisticSet19");
+        jboolean stylisticSet20 = getBool("isStylisticSet20");
+
+        jint capitalsOrdinal = getEnumOrdinal(
+                "getCapitals",
+                "()Ldev/sixik/noesisgui/nsgui/NSGui_FontCapitals;"
+        );
+
+        jint eastAsianLanguageOrdinal = getEnumOrdinal(
+                "getEastAsianLanguage",
+                "()Ldev/sixik/noesisgui/nsgui/NSGui_FontEastAsianLanguage;"
+        );
+
+        jint eastAsianWidthsOrdinal = getEnumOrdinal(
+                "getEastAsianWidths",
+                "()Ldev/sixik/noesisgui/nsgui/NSGui_FontEastAsianWidths;"
+        );
+
+        jint fractionOrdinal = getEnumOrdinal(
+                "getFraction",
+                "()Ldev/sixik/noesisgui/nsgui/NSGui_FontFraction;"
+        );
+
+        jint numeralAlignmentOrdinal = getEnumOrdinal(
+                "getNumeralAlignment",
+                "()Ldev/sixik/noesisgui/nsgui/NSGui_FontNumeralAlignment;"
+        );
+
+        jint numeralStyleOrdinal = getEnumOrdinal(
+                "getNumeralStyle",
+                "()Ldev/sixik/noesisgui/nsgui/NSGui_FontNumeralStyle;"
+        );
+
+        jint variantsOrdinal = getEnumOrdinal(
+                "getVariants",
+                "()Ldev/sixik/noesisgui/nsgui/NSGui_FontVariants;"
+        );
+
+        env->DeleteLocalRef(cls);
+
+        // ---- Теперь записываем всё в Noesis::Typography ----
+
+        typo.SetAnnotationAlternates(annotationAlternates);
+        typo.SetCapitals(static_cast<Noesis::FontCapitals>(capitalsOrdinal));
+        typo.SetCapitalSpacing(capitalSpacing == JNI_TRUE);
+        typo.SetCaseSensitiveForms(caseSensitiveForms == JNI_TRUE);
+        typo.SetContextualAlternates(contextualAlternates == JNI_TRUE);
+        typo.SetContextualLigatures(contextualLigatures == JNI_TRUE);
+        typo.SetContextualSwashes(contextualSwashes);
+        typo.SetDiscretionaryLigatures(discretionaryLigatures == JNI_TRUE);
+        typo.SetEastAsianExpertForms(eastAsianExpertForms == JNI_TRUE);
+        typo.SetEastAsianLanguage(static_cast<Noesis::FontEastAsianLanguage>(eastAsianLanguageOrdinal));
+        typo.SetEastAsianWidths(static_cast<Noesis::FontEastAsianWidths>(eastAsianWidthsOrdinal));
+        typo.SetFraction(static_cast<Noesis::FontFraction>(fractionOrdinal));
+        typo.SetHistoricalForms(historicalForms == JNI_TRUE);
+        typo.SetHistoricalLigatures(historicalLigatures == JNI_TRUE);
+        typo.SetKerning(kerning == JNI_TRUE);
+        typo.SetMathematicalGreek(mathematicalGreek == JNI_TRUE);
+        typo.SetNumeralAlignment(static_cast<Noesis::FontNumeralAlignment>(numeralAlignmentOrdinal));
+        typo.SetNumeralStyle(static_cast<Noesis::FontNumeralStyle>(numeralStyleOrdinal));
+        typo.SetSlashedZero(slashedZero == JNI_TRUE);
+        typo.SetStandardLigatures(standardLigatures == JNI_TRUE);
+        typo.SetStandardSwashes(standardSwashes);
+        typo.SetStylisticAlternates(stylisticAlternates);
+
+        typo.SetStylisticSet1(stylisticSet1 == JNI_TRUE);
+        typo.SetStylisticSet2(stylisticSet2 == JNI_TRUE);
+        typo.SetStylisticSet3(stylisticSet3 == JNI_TRUE);
+        typo.SetStylisticSet4(stylisticSet4 == JNI_TRUE);
+        typo.SetStylisticSet5(stylisticSet5 == JNI_TRUE);
+        typo.SetStylisticSet6(stylisticSet6 == JNI_TRUE);
+        typo.SetStylisticSet7(stylisticSet7 == JNI_TRUE);
+        typo.SetStylisticSet8(stylisticSet8 == JNI_TRUE);
+        typo.SetStylisticSet9(stylisticSet9 == JNI_TRUE);
+        typo.SetStylisticSet10(stylisticSet10 == JNI_TRUE);
+        typo.SetStylisticSet11(stylisticSet11 == JNI_TRUE);
+        typo.SetStylisticSet12(stylisticSet12 == JNI_TRUE);
+        typo.SetStylisticSet13(stylisticSet13 == JNI_TRUE);
+        typo.SetStylisticSet14(stylisticSet14 == JNI_TRUE);
+        typo.SetStylisticSet15(stylisticSet15 == JNI_TRUE);
+        typo.SetStylisticSet16(stylisticSet16 == JNI_TRUE);
+        typo.SetStylisticSet17(stylisticSet17 == JNI_TRUE);
+        typo.SetStylisticSet18(stylisticSet18 == JNI_TRUE);
+        typo.SetStylisticSet19(stylisticSet19 == JNI_TRUE);
+        typo.SetStylisticSet20(stylisticSet20 == JNI_TRUE);
+
+        typo.SetVariants(static_cast<Noesis::FontVariants>(variantsOrdinal));
+    }
+
+    static void CompositionUnderlineToCopy(
+            JNIEnv* env,
+            Noesis::CompositionUnderline& underline,
+            const jobject jUnderline
+    ) {
+        if (jUnderline == nullptr) return;
+
+        jclass cls = env->GetObjectClass(jUnderline);
+        if (cls == nullptr) return;
+
+        jfieldID fidStart = env->GetFieldID(cls, "start", "J");
+        jfieldID fidEnd   = env->GetFieldID(cls, "end", "J");
+        jfieldID fidStyle = env->GetFieldID(
+                cls,
+                "nsCompositionUnderline",
+                "Ldev/sixik/noesisgui/nsgui/NSGui_CompositionLineStyle;"
+        );
+        jfieldID fidBold  = env->GetFieldID(cls, "bold", "Z");
+
+        if (!fidStart || !fidEnd || !fidStyle || !fidBold) {
+            env->DeleteLocalRef(cls);
+            return;
+        }
+
+        jlong start = env->GetLongField(jUnderline, fidStart);
+        jlong end   = env->GetLongField(jUnderline, fidEnd);
+        jobject styleObj = env->GetObjectField(jUnderline, fidStyle);
+        jboolean bold    = env->GetBooleanField(jUnderline, fidBold);
+
+        jint styleOrdinal = EnumOrdinal(env, styleObj);
+
+        env->DeleteLocalRef(styleObj);
+        env->DeleteLocalRef(cls);
+
+        underline.start = static_cast<uint32_t>(start);
+        underline.end   = static_cast<uint32_t>(end);
+        underline.style = static_cast<Noesis::CompositionLineStyle>(styleOrdinal);
+
+        underline.bold  = (bold == JNI_TRUE);
+    }
+
+    static void CompositionUnderlineFromCopy(
+            JNIEnv* env,
+            const Noesis::CompositionUnderline& underline,
+            jobject jUnderline
+    ) {
+        if (jUnderline == nullptr) return;
+
+        jclass cls = env->GetObjectClass(jUnderline);
+        if (cls == nullptr) return;
+
+        jmethodID midSet = env->GetMethodID(
+                cls,
+                "set",
+                "(JJIZ)V"
+        );
+        env->DeleteLocalRef(cls);
+
+        if (midSet == nullptr) {
+            return;
+        }
+
+        jlong start   = static_cast<jlong>(underline.start);
+        jlong end     = static_cast<jlong>(underline.end);
+        jint line     = static_cast<jint>(underline.style);
+
+        jboolean bold = underline.bold ? JNI_TRUE : JNI_FALSE;
+
+        env->CallVoidMethod(jUnderline, midSet, start, end, line, bold);
     }
 };
 

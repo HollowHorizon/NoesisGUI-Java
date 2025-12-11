@@ -221,13 +221,14 @@ public final class LwjglNoesisDemo {
         root.setBackground(brush);
         root.setMargin(new NSThickness(50, 0, 0, 10));
 
-        NSButton button = new NSButton();
-        button.setName("Fobos");
-        button.setContent("Fobos Name");
-        button.setWidth(256);
-        button.setHeight(48);
+        final var textBox = NoesisGuiWidgets.textBox();
+        textBox.setWidth(128);
+        textBox.setHeight(42);
 
-        root.getChildren().add(button);
+        textBox.setText("Fobos IS Best");
+        textBox.setSelectionBrush(NSBrushes.Red());
+
+        root.getChildren().add(textBox);
 
         return root;
     }
