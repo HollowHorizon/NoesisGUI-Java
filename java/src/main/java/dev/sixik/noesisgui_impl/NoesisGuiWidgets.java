@@ -27,4 +27,8 @@ public class NoesisGuiWidgets {
     public static NSGridViewColumnHeader gridViewColumnHeader() {
         return new NSGridViewColumnHeader();
     }
+
+    public static NSToolTip toolTip() {
+        return new NSToolTip();
+    }
 }

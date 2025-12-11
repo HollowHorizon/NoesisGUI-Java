@@ -106,6 +106,7 @@ add_library(noesis_jni SHARED
         src/NsGui/NSCheckBoxJni.cpp
         src/NsGui/NSRepeatButtonJni.cpp
         src/NsGui/NSGridViewColumnHeaderJni.cpp
+        src/NsGui/NSToolTipJni.cpp
 )
 
 # Линкуемся по .lib
