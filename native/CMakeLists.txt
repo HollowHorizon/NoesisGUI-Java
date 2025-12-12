@@ -119,6 +119,23 @@ add_library(noesis_jni SHARED
         src/NsGui/NSProgressBarJni.cpp
         src/NsGui/NSScrollBarJni.cpp
         src/NsGui/NSTextBlockJni.cpp
+        src/NsGui/NSPasswordBoxJni.cpp
+        src/NsGui/NSTextElementJni.cpp
+        src/NsGui/NSInlineJni.cpp
+        src/NsGui/NSSpanJni.cpp
+        src/NsGui/NSItalicJni.cpp
+        src/NsGui/NSBoldJni.cpp
+        src/NsGui/NSUnderlineJni.cpp
+        src/NsGui/NSHyperlinkJni.cpp
+        src/NsGui/NSInlineCollectionJni.cpp
+        src/NsGui/NSColumnDefinitionCollectionJni.cpp
+        src/NsGui/NSCommandBindingCollectionJni.cpp
+        src/NsGui/NSInputBindingCollectionJni.cpp
+        src/NsGui/NSRowDefinitionCollectionJni.cpp
+        src/NsGui/NSTriggerCollectionJni.cpp
+        src/NsGui/NSRunJni.cpp
+        src/NsGui/NSInlineUIContainerJni.cpp
+        src/NsGui/NSLineBreakJni.cpp
 )
 
 # Линкуемся по .lib

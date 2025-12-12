@@ -52,6 +52,14 @@ public class NoesisGuiWidgets {
         return new NSTextBox();
     }
 
+    public static NSTextBlock textBlock() {
+        return new NSTextBlock();
+    }
+
+    public static NSPasswordBox passwordBox() {
+        return new NSPasswordBox();
+    }
+
     public static NSSlider slider() {
         return new NSSlider();
     }

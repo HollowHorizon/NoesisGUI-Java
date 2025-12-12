@@ -9,6 +9,8 @@ import dev.sixik.noesisgui_impl.NoesisGuiWidgets;
 import dev.sixik.noesisgui_ini.KeyValueParser;
 import dev.sixik.noesisgui_ini.NoesisGuiJava;
 import dev.sixik.noesisgui_render.gl.NSOpenGl;
+import dev.sixik.noesisgui_render.lwgl.NoesisGlfwKeyMap;
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL;
 
 import java.io.IOException;
@@ -89,6 +91,22 @@ public final class LwjglNoesisDemo {
             noesisMouseMove(x, y);
         });
 
+        glfwSetKeyCallback(window, (w, key, scancode, action, mods) -> {
+            final var noesis_key = NoesisGlfwKeyMap.toNoesisKey(key);
+
+            if (action == GLFW_PRESS) {
+                _view.keyDown(noesis_key);
+            } else if (action == GLFW_RELEASE) {
+                _view.keyUp(noesis_key);
+            } else if (action == GLFW_REPEAT) {
+                _view.keyDown(noesis_key);
+            }
+        });
+
+        glfwSetCharCallback(window, (w, codepoint) -> {
+            _view.charEvent(codepoint);
+        });
+
         glfwSetMouseButtonCallback(window, (win, button, action, mods) -> {
             double xpos[] = new double[1];
             double ypos[] = new double[1];
@@ -104,6 +122,19 @@ public final class LwjglNoesisDemo {
                 }
             }
         });
+    }
+
+    private int mapKey(int glfwKey) {
+        return switch (glfwKey) {
+            case GLFW_KEY_ENTER -> NSGui_Key.RETURN.value;
+            case GLFW_KEY_BACKSPACE -> NSGui_Key.BACK.value;
+            case GLFW_KEY_TAB -> NSGui_Key.TAB.value;
+            case GLFW_KEY_LEFT -> NSGui_Key.LEFT.value;
+            case GLFW_KEY_RIGHT -> NSGui_Key.RIGHT.value;
+            case GLFW_KEY_UP -> NSGui_Key.UP.value;
+            case GLFW_KEY_DOWN -> NSGui_Key.DOWN.value;
+            default -> -1;
+        };
     }
 
     ////////////////////////////////////////////////////////////////////////////////
@@ -222,16 +253,15 @@ public final class LwjglNoesisDemo {
         root.setBackground(brush);
         root.setMargin(new NSThickness(50, 0, 0, 10));
 
-        final var textBox = NoesisGuiWidgets.scrollBar();
-        textBox.setWidth(128);
-        textBox.setHeight(42);
+        final NSTextBlock block = new NSTextBlock();
+        block.getInlines().ad
 
+        final NSHyperlink hyperlink = new NSHyperlink();
+        hyperlink.setTargetName("Fobos Target");
+        hyperlink.setNavigateUri("Fobos Uri");
+        hyperlink.setWidth(100);
 
-        textBox.scrollEvent(((component, args) -> {
-            System.out.println(args.newValue);
-        }));
-
-        root.getChildren().add(textBox);
+        root.getChildren().add(hyperlink);
 
         return root;
     }

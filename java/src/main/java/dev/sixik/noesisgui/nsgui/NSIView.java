@@ -188,6 +188,7 @@ public class NSIView {
 
     /**
      * Notifies that a mouse button was pressed. Origin is in the upper-left corner.
+     *
      * @return Returns true if event was handled
      */
     public final boolean mouseButtonDown(final int x, final int y, final NSGui_MouseButton button) {
@@ -196,20 +197,22 @@ public class NSIView {
 
     /**
      * Notifies that a mouse button was released. Origin is in the upper-left corner.
+     *
      * @return Returns true if event was handled
      */
     public final boolean mouseButtonUp(final int x, final int y, final NSGui_MouseButton button) {
-        return nativeMouseButtonUp(getPtr(), x ,y, button.ordinal());
+        return nativeMouseButtonUp(getPtr(), x, y, button.ordinal());
     }
 
     /**
      * Notifies that a mouse button was double clicked. Origin is in the upper-left corner. <br>
      * When a double click happens the following sequence of events are expected: <br>
-     *  - MouseButtonDown (first click) <br>
-     *  - MouseButtonUp <br>
-     *  - MouseDoubleClick (second click) <br>
-     *  - MouseButtonUp <br>
+     * - MouseButtonDown (first click) <br>
+     * - MouseButtonUp <br>
+     * - MouseDoubleClick (second click) <br>
+     * - MouseButtonUp <br>
      * {@link <a href="https://docs.microsoft.com/en-us/windows/win32/learnwin32/mouse-clicks#double-clicks">See</a>}
+     *
      * @return Returns true if event was handled
      */
     public final boolean mouseDoubleClick(final int x, final int y, final NSGui_MouseButton button) {
@@ -218,6 +221,7 @@ public class NSIView {
 
     /**
      * Notifies that mouse was moved. Origin is in the upper-left corner.
+     *
      * @return Returns true if event was handled
      */
     public final boolean mouseMove(final int x, final int y) {
@@ -230,6 +234,7 @@ public class NSIView {
      * multiples or divisions of 120 (is the default value for 3 lines of scrolling). A positive
      * value indicates that the wheel was rotated forward, away from the user; a negative value
      * indicates that the wheel was rotated backward, toward the user.
+     *
      * @return Returns true if event was handled
      */
     public final boolean mouseWheel(final int x, final int y, final int wheelRotation) {
@@ -242,6 +247,7 @@ public class NSIView {
      * multiples or divisions of 120 (is the default value for 3 lines of scrolling). A positive
      * value indicates that the wheel was rotated to the right; a negative value indicates that
      * the wheel was rotated to the left.
+     *
      * @return Returns true if event was handled
      */
     public final boolean mouseHWheel(final int x, final int y, final int wheelRotation) {
@@ -253,6 +259,7 @@ public class NSIView {
      * stick. Value ranges from -1.0 (fully pushed down) to +1.0 (fully pushed up). The value
      * is internally adjusted to be frame-rate independent. No dead zone filtering is applied.
      * Raises the event on the focused element.
+     *
      * @return Returns true if event was handled
      */
     public final boolean scroll(final float value) {
@@ -264,10 +271,11 @@ public class NSIView {
      * stick. Value ranges from -1.0 (fully pushed down) to +1.0 (fully pushed up). The value
      * is internally adjusted to be frame-rate independent. No dead zone filtering is applied.
      * Raises the event on the element under the specified x,y.
+     *
      * @return Returns true if event was handled
      */
     public final boolean scroll(final int x, final int y, final float value) {
-        return nativeScrollPos(getPtr(), x ,y, value);
+        return nativeScrollPos(getPtr(), x, y, value);
     }
 
     /**
@@ -275,6 +283,7 @@ public class NSIView {
      * stick. Value ranges from -1.0 (fully pushed left) to +1.0 (fully pushed right). The value
      * is internally adjusted to be frame-rate independent. No dead zone filtering is applied.
      * Raises the event on the focused element.
+     *
      * @return Returns true if event was handled
      */
     public final boolean HScroll(final float value) {
@@ -286,6 +295,7 @@ public class NSIView {
      * stick. Value ranges from -1.0 (fully pushed left) to +1.0 (fully pushed right). The value
      * is internally adjusted to be frame-rate independent. No dead zone filtering is applied.
      * Raises the event on the element under the specified x,y.
+     *
      * @return Returns true if event was handled
      */
     public final boolean HScroll(final int x, final int y, final float value) {
@@ -294,6 +304,7 @@ public class NSIView {
 
     /**
      * Notifies that a finger touched the screen. Origin is in the upper-left corner.
+     *
      * @return Returns true if event was handled
      */
     public final boolean touchDown(final int x, final int y, long id) {
@@ -302,6 +313,7 @@ public class NSIView {
 
     /**
      * Notifies that a finger moved on the screen. Origin is in the upper-left corner.
+     *
      * @return Returns true if event was handled
      */
     public final boolean touchMove(final int x, final int y, long id) {
@@ -310,6 +322,7 @@ public class NSIView {
 
     /**
      * Notifies that a finger raised off of the screen. Origin is in the upper-left corner.
+     *
      * @return Returns true if event was handled
      */
     public final boolean touchUp(final int x, final int y, long id) {
@@ -318,6 +331,7 @@ public class NSIView {
 
     /**
      * Notifies that a key was initially pressed or repeatedly pressed
+     *
      * @return Returns true if event was handled
      */
     public final boolean keyDown(final NSGui_Key key) {
@@ -326,6 +340,7 @@ public class NSIView {
 
     /**
      * Notifies that a key was initially pressed or repeatedly pressed
+     *
      * @return Returns true if event was handled
      */
     public final boolean keyDown(final int key_code) {
@@ -334,6 +349,7 @@ public class NSIView {
 
     /**
      * Notifies that a key was released.
+     *
      * @return Returns true if event was handled
      */
     public final boolean keyUp(final NSGui_Key key) {
@@ -342,6 +358,7 @@ public class NSIView {
 
     /**
      * Notifies that a key was released.
+     *
      * @return Returns true if event was handled
      */
     public final boolean keyUp(final int key_code) {
@@ -352,9 +369,10 @@ public class NSIView {
      * Notifies that a key was translated to the corresponding unicode character. <br>
      * If a key is repeatedly pressed, its corresponding 'Char' event is sent again. <br>
      * 'Char' messages are expected to be sent between the corresponding 'Down' and 'Up' events: <br>
-     *  - KeyDown <br>
-     *  - Char <br>
-     *  - KeyUp <br>
+     * - KeyDown <br>
+     * - Char <br>
+     * - KeyUp <br>
+     *
      * @return Returns true if event was handled
      */
     public final boolean charEvent(final long ch) {
@@ -418,42 +436,79 @@ public class NSIView {
 
 
     private static native long nativeGetRenderer(long ptr);
+
     private static native long nativeGetContent(long ptr);
+
     private static native void nativeSetScale(long ptr, float scale);
+
     private static native void nativeSetSize(long ptr, long w, long h);
+
     private static native void nativeSetTessellationMaxPixelError(long ptr, NSTessellationMaxPixelError error);
+
     private static native void nativeGetTessellationMaxPixelError(long ptr, NSTessellationMaxPixelError error);
+
     private static native void nativeSetFlags(long ptr, int flags);
+
     private static native long nativeGetFlags(long ptr);
+
     private static native void nativeSetHoldingTimeThreshold(long ptr, long milliseconds);
+
     private static native void nativeSetHoldingDistanceThreshold(long ptr, long pixels);
+
     private static native void nativeSetManipulationDistanceThreshold(long ptr, long pixels);
+
     private static native void nativeSetDoubleTapTimeThreshold(long ptr, long milliseconds);
+
     private static native void nativeSetDoubleTapDistanceThreshold(long ptr, long pixels);
+
     private static native void nativeSetProjectionMatrix(long ptr, NSMatrix4 mtx);
+
     private static native void nativeSetStereoOffscreenScaleFactor(long ptr, float factor);
+
     private static native void nativeActivate(long ptr);
+
     private static native void nativeDeactivate(long ptr);
+
     private static native void nativeSetEmulateTouch(long ptr, boolean emulate);
+
     private static native boolean nativeMouseButtonDown(long ptr, int x, int y, int button);
+
     private static native boolean nativeMouseButtonUp(long ptr, int x, int y, int button);
+
     private static native boolean nativeMouseDoubleClick(long ptr, int x, int y, int button);
+
     private static native boolean nativeMouseMove(long ptr, int x, int y);
+
     private static native boolean nativeMouseWheel(long ptr, int x, int y, int wheel);
+
     private static native boolean nativeMouseHWheel(long ptr, int x, int y, int wheel);
+
     private static native boolean nativeScroll(long ptr, float value);
+
     private static native boolean nativeScrollPos(long ptr, int x, int y, float value);
+
     private static native boolean nativeHScroll(long ptr, float value);
+
     private static native boolean nativeHScrollPos(long ptr, int x, int y, float value);
+
     private static native boolean nativeTouchDown(long ptr, int x, int y, long id);
+
     private static native boolean nativeTouchMove(long ptr, int x, int y, long id);
+
     private static native boolean nativeTouchUp(long ptr, int x, int y, long id);
+
     private static native boolean nativeKeyDown(long ptr, int key_code);
+
     private static native boolean nativeKeyUp(long ptr, int key_code);
+
     private static native boolean nativeChar(long ptr, long ch);
+
     private static native boolean nativeUpdate(long ptr, double value);
+
     private static native void nativeRestartTimer(long ptr, long id, long value);
+
     private static native void nativeCancelTimer(long ptr, long id);
+
     private static native void nativeGetStats(long ptr, NSViewStats stats);
 }
 

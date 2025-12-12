@@ -7,6 +7,7 @@
 #include "NsGui/GradientStopCollection.h"
 #include "NsGui/Label.h"
 #include "NsGui/LinearGradientBrush.h"
+#include "NsGui/PasswordBox.h"
 #include "NsGui/SolidColorBrush.h"
 #include "NsGui/TextBlock.h"
 #include "NsGui/TextBox.h"
@@ -19,9 +20,6 @@ namespace Noesis {
 }
 
 void test() {
-    // auto *collection = new Noesis::GradientStopCollection();
-    // collection->Add()
-    Noesis::Label* label = new Noesis::Label();
-    Noesis::TextBlock
+
 }
 

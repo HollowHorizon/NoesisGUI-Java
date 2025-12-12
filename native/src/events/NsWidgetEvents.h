@@ -8,6 +8,7 @@
 #include "../utils/NSJavaUtils.h"
 #include "../utils/NSJniUtils.h"
 #include "NsDrawing/Rect.h"
+#include "NsGui/Hyperlink.h"
 #include "NsGui/INotifyCollectionChanged.h"
 #include "NsGui/ItemContainerGenerator.h"
 #include "NsGui/ScrollBar.h"
@@ -484,6 +485,22 @@ namespace NoesisJava {
         };
 
         JavaNSScrollEventArgs args = {};
+    };
+
+    struct JavaNSRequestNavigateEventHandler : JavaMethodHandler {
+        struct JavaNSRequestNavigateEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
+            const char *uri;
+            const char* target;
+
+            jobject Create(JNIEnv *env) override {
+                return NSJavaUtils::createObject(env,
+                 "dev/sixik/noesisgui/nsgui/NSRequestNavigateEventArgs",
+                 "(JJZLjava/lang/String;Ljava/lang/String;)V",
+                 source_ptr, routedEvent_ptr, handled, env->NewStringUTF(uri), env->NewStringUTF(target));
+            }
+        };
+
+        JavaNSRequestNavigateEventArgs args = {};
     };
 
     template <typename JavaArgsType>

@@ -7,9 +7,9 @@ import dev.sixik.noesisgui.nscore.NSDependencyProperty;
  * the area is painted.
  *
  * @see <a href="http://msdn.microsoft.com/en-us/library/system.windows.media.brush.aspx">
- *      Microsoft Documentation: Brush Class</a>
+ * Microsoft Documentation: Brush Class</a>
  */
-public class NSBrush extends NSAnimatable{
+public class NSBrush extends NSAnimatable {
 
     public static final NSDependencyProperty OpacityProperty = new NSDependencyProperty(nOpacityProperty());
     public static final NSDependencyProperty RelativeTransformProperty = new NSDependencyProperty(nRelativeTransformProperty());
