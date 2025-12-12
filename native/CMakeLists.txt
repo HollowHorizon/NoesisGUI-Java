@@ -140,6 +140,16 @@ add_library(noesis_jni SHARED
         src/NsGui/NSTreeViewJni.cpp
         src/NsGui/NSContextMenuJni.cpp
         src/NsGui/NSMenuJni.cpp
+        src/NsGui/NSToolBarOverflowPanelJni.cpp
+        src/NsGui/NSCanvasJni.cpp
+        src/NsGui/NSStackPanelJni.cpp
+        src/NsGui/NSToolBarPanelJni.cpp
+        src/NsGui/NSUniformGridJni.cpp
+        src/NsGui/NSDockPanelJni.cpp
+        src/NsGui/NSWrapPanelJni.cpp
+        src/NsGui/NSTabPanelJni.cpp
+        src/NsGui/NSVirtualizingStackPanelJni.cpp
+        src/NsGui/NSVirtualizingWrapPanelJni.cpp
 )
 
 # Линкуемся по .lib

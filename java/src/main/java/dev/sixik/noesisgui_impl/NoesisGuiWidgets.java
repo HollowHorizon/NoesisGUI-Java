@@ -83,4 +83,28 @@ public class NoesisGuiWidgets {
     public static NSContextMenu contextMenu() {
         return new NSContextMenu();
     }
+
+    public static NSGrid grid() {
+        return new NSGrid();
+    }
+
+    public static NSToolBarOverflowPanel toolBarOverflowPanel() {
+        return new NSToolBarOverflowPanel();
+    }
+
+    public static NSCanvas canvas() {
+        return new NSCanvas();
+    }
+
+    public static NSStackPanel stackPanel() {
+        return new NSStackPanel();
+    }
+
+    public static NSToolBarPanel toolBarPanel() {
+        return new NSToolBarPanel();
+    }
+
+    public static NSUniformGrid uniformGrid() {
+        return new NSUniformGrid();
+    }
 }
