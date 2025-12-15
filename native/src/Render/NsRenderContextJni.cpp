@@ -131,7 +131,6 @@
 
         ctx->Init(window, samples, vsync, sRGB);
 
-        // записываем обратно изменённое значение samples
         if (jSamples != nullptr && env->GetArrayLength(jSamples) > 0) {
             jint out = static_cast<jint>(samples);
             env->SetIntArrayRegion(jSamples, 0, 1, &out);

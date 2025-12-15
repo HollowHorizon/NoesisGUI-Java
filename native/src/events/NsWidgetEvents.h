@@ -537,6 +537,51 @@ namespace NoesisJava {
         JavaNSPropertyChangedEventArgs args = {};
     };
 
+    struct JavaNSDragCompletedEventHandler : JavaMethodHandler {
+        struct JavaNSDragCompletedEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
+            bool canceled;
+            float horizontalChange;
+            float verticalChange;
+
+            jobject Create(JNIEnv *env) override {
+                return NSJavaUtils::createObject(env,
+                 "dev/sixik/noesisgui/nsgui/NSDragCompletedEventArgs",
+                 "(JJZZFF)V", source_ptr, routedEvent_ptr, handled, canceled, horizontalChange, verticalChange);
+            }
+        };
+        JavaNSDragCompletedEventArgs args = {};
+    };
+
+    struct JavaNSDragDeltaEventHandler : JavaMethodHandler {
+        struct JavaNSDragDeltaEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
+            float horizontalChange;
+            float verticalChange;
+
+            jobject Create(JNIEnv *env) override {
+                return NSJavaUtils::createObject(env,
+                 "dev/sixik/noesisgui/nsgui/NSDragDeltaEventArgs",
+                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, horizontalChange, verticalChange);
+            }
+        };
+
+        JavaNSDragDeltaEventArgs args = {};
+    };
+
+    struct JavaNSDragStartedEventHandler : JavaMethodHandler {
+        struct JavaNSDragStartedEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
+            float horizontalChange;
+            float verticalChange;
+
+            jobject Create(JNIEnv *env) override {
+                return NSJavaUtils::createObject(env,
+                 "dev/sixik/noesisgui/nsgui/NSDragStartedEventArgs",
+                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, horizontalChange, verticalChange);
+            }
+        };
+
+        JavaNSDragStartedEventArgs args = {};
+    };
+
     template <typename JavaArgsType>
     struct GenericEventHandler {
         jobject handlerGlobal = nullptr;

@@ -257,6 +257,8 @@ add_library(noesis_jni SHARED
         NoesisSDK/Packages/App/Launcher/Include/NsApp/CommandLine.h
         NoesisSDK/Packages/App/Launcher/Include/NsApp/EntryPoint.h
         NoesisSDK/Packages/Render/RenderContext/Include/NsRender/Image.h
+        src/NsGui/NSThumbJni.cpp
+        src/NsGui/NSGridSplitterJni.cpp
 )
 
 # Линкуемся по .lib

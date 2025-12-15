@@ -5,10 +5,12 @@ import dev.sixik.noesisgui.nsdrawing.NSColor;
 import dev.sixik.noesisgui.nsdrawing.NSPoint;
 import dev.sixik.noesisgui.nsgui.*;
 import dev.sixik.noesisgui.nshandlers.NSEventHandlerManager;
+import dev.sixik.noesisgui.nsrenderer.NSRenderContext;
 import dev.sixik.noesisgui_impl.NSThemes;
 import dev.sixik.noesisgui_impl.NoesisGuiWidgets;
 import dev.sixik.noesisgui_ini.KeyValueParser;
 import dev.sixik.noesisgui_ini.NoesisGuiJava;
+import dev.sixik.noesisgui_render.gl.NSGLRenderContext;
 import dev.sixik.noesisgui_render.gl.NSOpenGl;
 import dev.sixik.noesisgui_render.lwgl.NoesisGlfwKeyMap;
 import org.lwjgl.glfw.GLFW;
@@ -41,6 +43,8 @@ public final class LwjglNoesisDemo {
     private NSButton btnPrimary, btnSecondary, btnApplyTheme, btnPlayAnim, btnClearLog;
     private NSHyperlink linkNoesis;
 //    private NSListBox logList;
+
+    private NSRenderContext renderContext;
 
     private boolean navGuard = false;
 
@@ -204,6 +208,7 @@ public final class LwjglNoesisDemo {
 
         NoesisGui.init();
 
+        renderContext = NSGLRenderContext.create();
         NoesisGui.setThemeProviders();
         NoesisGui.loadApplicationResources(NSThemes.darkBlue());
 

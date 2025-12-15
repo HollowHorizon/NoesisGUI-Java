@@ -5,8 +5,9 @@
 
 
 #include <NsCore/Package.h>
-#include <NsRender/GLFactory.h>
+#include <Render/GLRenderDevice/Include/NsRender/GLFactory.h>
 #include <NsRender/Texture.h>
+#include "NsRender/RenderDevice.h"
 
 #include "GLRenderDevice.h"
 
