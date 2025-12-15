@@ -259,6 +259,12 @@ add_library(noesis_jni SHARED
         NoesisSDK/Packages/Render/RenderContext/Include/NsRender/Image.h
         src/NsGui/NSThumbJni.cpp
         src/NsGui/NSGridSplitterJni.cpp
+        src/NsGui/NSSelectorJni.cpp
+        src/NsGui/NSComboBoxJni.cpp
+        src/NsGui/NSTabControlJni.cpp
+        src/NsGui/NSSelectedItemsCollectionJni.cpp
+        src/NsGui/NSListBoxJni.cpp
+        src/NsGui/NSListViewJni.cpp
 )
 
 # Линкуемся по .lib

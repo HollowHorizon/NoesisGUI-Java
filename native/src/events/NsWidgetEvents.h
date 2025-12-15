@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <jni.h>
+#include <vector>
 
 #include "../utils/NSJavaUtils.h"
 #include "../utils/NSJniUtils.h"
@@ -12,6 +13,7 @@
 #include "NsGui/INotifyCollectionChanged.h"
 #include "NsGui/ItemContainerGenerator.h"
 #include "NsGui/ScrollBar.h"
+#include "NsGui/Selector.h"
 
 namespace NoesisJava {
     struct JavaDefault {
@@ -40,8 +42,8 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSRoutedEventArgs",
-                 "(JJZ)V", source_ptr, routedEvent_ptr, handled);
+                                                 "dev/sixik/noesisgui/nsgui/NSRoutedEventArgs",
+                                                 "(JJZ)V", source_ptr, routedEvent_ptr, handled);
             }
         };
 
@@ -173,29 +175,28 @@ namespace NoesisJava {
     struct JavaNSInputEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
         jobject Create(JNIEnv *env) override {
             return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSInputEventArgs",
-                 "(JJZ)V", source_ptr, routedEvent_ptr, handled);
+                                             "dev/sixik/noesisgui/nsgui/NSInputEventArgs",
+                                             "(JJZ)V", source_ptr, routedEvent_ptr, handled);
         }
     };
 
     struct JavaNSKeyboardEventArgs : JavaNSInputEventArgs {
         jobject Create(JNIEnv *env) override {
             return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSKeyboardEventArgs",
-                 "(JJZ)V", source_ptr, routedEvent_ptr, handled);
+                                             "dev/sixik/noesisgui/nsgui/NSKeyboardEventArgs",
+                                             "(JJZ)V", source_ptr, routedEvent_ptr, handled);
         }
     };
 
     struct JavaNSKeyboardFocusChangedEventHandler : JavaMethodHandler {
         struct JavaNSKeyboardFocusChangedEventArgs : JavaNSKeyboardEventArgs {
-
             jlong oldFocus{};
             jlong newFocus{};
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                   "dev/sixik/noesisgui/nsgui/NSKeyboardFocusChangedEventArgs",
-                   "(JJZJJ)V", source_ptr, routedEvent_ptr, handled, oldFocus, newFocus);
+                                                 "dev/sixik/noesisgui/nsgui/NSKeyboardFocusChangedEventArgs",
+                                                 "(JJZJJ)V", source_ptr, routedEvent_ptr, handled, oldFocus, newFocus);
             }
         };
 
@@ -239,34 +240,35 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-               "dev/sixik/noesisgui/nsgui/NSKeyEventArgs",
-               "(JJZJIII)V", source_ptr, routedEvent_ptr, handled, &args,
-                args.key, args.originalKey, args.keyStates);
-                }
-            };
+                                                 "dev/sixik/noesisgui/nsgui/NSKeyEventArgs",
+                                                 "(JJZJIII)V", source_ptr, routedEvent_ptr, handled, &args,
+                                                 args.key, args.originalKey, args.keyStates);
+            }
+        };
+
         JavaNSKeyEventArgs args = {};
     };
 
     struct JavaNSMouseButtonEventHandler : JavaMethodHandler {
         struct JavaNSMouseButtonEventArgs : JavaNSMouseEventHandler::JavaNSMouseEventArgs {
-            Noesis::MouseButtonEventArgs _args = Noesis::MouseButtonEventArgs(nullptr, nullptr, Noesis::MouseButton_Count, Noesis::MouseButtonState_Pressed, 0);
+            Noesis::MouseButtonEventArgs _args = Noesis::MouseButtonEventArgs(
+                nullptr, nullptr, Noesis::MouseButton_Count, Noesis::MouseButtonState_Pressed, 0);
 
             jobject Create(JNIEnv *env) override {
-
                 const auto jPoint = NSJavaUtils::createObject(env, "dev/sixik/noesisgui/nsdrawing/NSPoint", "()V");
                 NSJniUtils::PointFromCopy(env, _args.position, jPoint);
 
                 return NSJavaUtils::createObject(env,
-                   "dev/sixik/noesisgui/nsgui/NSMouseButtonEventArgs",
-                   "(JJZLdev/sixik/noesisgui/nsdrawing/NSPoint;IIIIIIIJ)V",
-                   source_ptr, routedEvent_ptr, handled, jPoint,
-                    _args.leftButton, _args.middleButton,
-                    _args.rightButton, _args.xButton1Button,
-                    _args.xButton2Button,
-                    _args.changedButton,
-                    _args.buttonState,
-                    _args.clickCount
-                    );
+                                                 "dev/sixik/noesisgui/nsgui/NSMouseButtonEventArgs",
+                                                 "(JJZLdev/sixik/noesisgui/nsdrawing/NSPoint;IIIIIIIJ)V",
+                                                 source_ptr, routedEvent_ptr, handled, jPoint,
+                                                 _args.leftButton, _args.middleButton,
+                                                 _args.rightButton, _args.xButton1Button,
+                                                 _args.xButton2Button,
+                                                 _args.changedButton,
+                                                 _args.buttonState,
+                                                 _args.clickCount
+                );
             }
         };
 
@@ -275,10 +277,10 @@ namespace NoesisJava {
 
     struct JavaNSMouseWheelEventHandler : JavaMethodHandler {
         struct JavaNSMouseEventArgs : JavaNSMouseEventHandler::JavaNSMouseEventArgs {
-            Noesis::MouseWheelEventArgs _args = Noesis::MouseWheelEventArgs(nullptr, nullptr, 0, Noesis::Orientation_Horizontal);
+            Noesis::MouseWheelEventArgs _args = Noesis::MouseWheelEventArgs(
+                nullptr, nullptr, 0, Noesis::Orientation_Horizontal);
 
             jobject Create(JNIEnv *env) override {
-
                 const auto jPoint = NSJavaUtils::createObject(
                     env,
                     "dev/sixik/noesisgui/nsdrawing/NSPoint",
@@ -312,7 +314,6 @@ namespace NoesisJava {
             Noesis::TouchEventArgs args = Noesis::TouchEventArgs(nullptr, nullptr, Noesis::Point(), 0);
 
             jobject Create(JNIEnv *env) override {
-
                 const auto jPoint = NSJavaUtils::createObject(
                     env,
                     "dev/sixik/noesisgui/nsdrawing/NSPoint",
@@ -321,13 +322,13 @@ namespace NoesisJava {
                 NSJniUtils::PointFromCopy(env, args.touchPoint, jPoint);
 
                 return NSJavaUtils::createObject(env,
-                     "dev/sixik/noesisgui/nsgui/NSTouchEventArgs",
-                     "(JJZLdev/sixik/noesisgui/nsdrawing/NSPoint;J)V",
-                     source_ptr,
-                     routedEvent_ptr,
-                     handled,
-                     jPoint,
-                     args.touchDevice
+                                                 "dev/sixik/noesisgui/nsgui/NSTouchEventArgs",
+                                                 "(JJZLdev/sixik/noesisgui/nsdrawing/NSPoint;J)V",
+                                                 source_ptr,
+                                                 routedEvent_ptr,
+                                                 handled,
+                                                 jPoint,
+                                                 args.touchDevice
                 );
             }
         };
@@ -341,8 +342,9 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSTextCompositionEventArgs",
-                 "(JJZI)V", source_ptr, routedEvent_ptr, handled, static_cast<jint>(args.ch));
+                                                 "dev/sixik/noesisgui/nsgui/NSTextCompositionEventArgs",
+                                                 "(JJZI)V", source_ptr, routedEvent_ptr, handled,
+                                                 static_cast<jint>(args.ch));
             }
         };
 
@@ -355,10 +357,10 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 const auto jPoint = NSJavaUtils::createObject(
-                                    env,
-                                    "dev/sixik/noesisgui/nsdrawing/NSPoint",
-                                    "()V"
-                                );
+                    env,
+                    "dev/sixik/noesisgui/nsdrawing/NSPoint",
+                    "()V"
+                );
                 NSJniUtils::PointFromCopy(env, _args.position, jPoint);
                 return NSJavaUtils::createObject(
                     env,
@@ -387,8 +389,9 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSQueryContinueDragEventArgs",
-                 "(JJZZII)V", source_ptr, routedEvent_ptr, handled, args.escapePressed, args.keyStates, args.action);
+                                                 "dev/sixik/noesisgui/nsgui/NSQueryContinueDragEventArgs",
+                                                 "(JJZZII)V", source_ptr, routedEvent_ptr, handled, args.escapePressed,
+                                                 args.keyStates, args.action);
             }
         };
 
@@ -401,8 +404,9 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-             "dev/sixik/noesisgui/nsgui/NSGiveFeedbackEventArgs",
-             "(JJZIZ)V", source_ptr, routedEvent_ptr, handled, args.effects, args.useDefaultCursors);
+                                                 "dev/sixik/noesisgui/nsgui/NSGiveFeedbackEventArgs",
+                                                 "(JJZIZ)V", source_ptr, routedEvent_ptr, handled, args.effects,
+                                                 args.useDefaultCursors);
             }
         };
 
@@ -411,38 +415,41 @@ namespace NoesisJava {
 
     struct JavaNSDragEventHandler : JavaMethodHandler {
         struct JavaNSDragEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
-            Noesis::DragEventArgs args = Noesis::DragEventArgs(nullptr, nullptr, nullptr, 0, 0, nullptr, Noesis::Point());
+            Noesis::DragEventArgs args = Noesis::DragEventArgs(nullptr, nullptr, nullptr, 0, 0, nullptr,
+                                                               Noesis::Point());
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-             "dev/sixik/noesisgui/nsgui/NSDragEventArgs",
-             "(JJZJIII)V", source_ptr, routedEvent_ptr, handled, reinterpret_cast<jlong>(args.data), args.keyStates, args.allowedEffects, args.effects);
+                                                 "dev/sixik/noesisgui/nsgui/NSDragEventArgs",
+                                                 "(JJZJIII)V", source_ptr, routedEvent_ptr, handled,
+                                                 reinterpret_cast<jlong>(args.data), args.keyStates,
+                                                 args.allowedEffects, args.effects);
             }
         };
 
         JavaNSDragEventArgs args = {};
     };
 
-    struct JavaNSItemsChangedEventHandler :  JavaMethodHandler {
+    struct JavaNSItemsChangedEventHandler : JavaMethodHandler {
         struct JavaNSItemsChangedEventArgs : JavaDefault {
             virtual ~JavaNSItemsChangedEventArgs() = default;
 
             Noesis::ItemsChangedEventArgs args = Noesis::ItemsChangedEventArgs(
                 Noesis::NotifyCollectionChangedAction::NotifyCollectionChangedAction_Add,
                 Noesis::GeneratorPosition(), Noesis::GeneratorPosition(), 0, 0
-                );
+            );
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-             "dev/sixik/noesisgui/nsgui/NSItemsChangedEventArgs",
-             "(IIIIIII)V",
-             args.action,
-             args.position.index,
-             args.position.offset,
-             args.oldPosition.index,
-             args.oldPosition.offset,
-             args.itemCount,
-             args.itemUICount);
+                                                 "dev/sixik/noesisgui/nsgui/NSItemsChangedEventArgs",
+                                                 "(IIIIIII)V",
+                                                 args.action,
+                                                 args.position.index,
+                                                 args.position.offset,
+                                                 args.oldPosition.index,
+                                                 args.oldPosition.offset,
+                                                 args.itemCount,
+                                                 args.itemUICount);
             }
         };
 
@@ -450,40 +457,36 @@ namespace NoesisJava {
     };
 
     struct JavaNSRoutedPropertyChangedEventHandler : JavaMethodHandler {
-
         struct JavaNSRoutedPropertyChangedEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
-
         };
 
         struct JavaNSRoutedPropertyChangedEventArgsLong : JavaNSRoutedPropertyChangedEventArgs {
-
             long oldValue = 0;
             long newValue = 0;
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSRoutedPropertyChangedEventArgsLong",
-                 "(JJZJJ)V", source_ptr, routedEvent_ptr, handled, oldValue, newValue);
+                                                 "dev/sixik/noesisgui/nsgui/NSRoutedPropertyChangedEventArgsLong",
+                                                 "(JJZJJ)V", source_ptr, routedEvent_ptr, handled, oldValue, newValue);
             }
         };
 
         struct JavaNSRoutedPropertyChangedEventArgsBaseComponent : JavaNSRoutedPropertyChangedEventArgsLong {
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSRoutedPropertyChangedEventArgsBaseComponent",
-                 "(JJZJJ)V", source_ptr, routedEvent_ptr, handled, oldValue, newValue);
+                                                 "dev/sixik/noesisgui/nsgui/NSRoutedPropertyChangedEventArgsBaseComponent",
+                                                 "(JJZJJ)V", source_ptr, routedEvent_ptr, handled, oldValue, newValue);
             }
         };
 
         struct JavaNSRoutedPropertyChangedEventArgsFloat : JavaNSRoutedPropertyChangedEventArgs {
-
             float oldValue = 0;
             float newValue = 0;
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSRoutedPropertyChangedEventArgsFloat",
-                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, oldValue, newValue);
+                                                 "dev/sixik/noesisgui/nsgui/NSRoutedPropertyChangedEventArgsFloat",
+                                                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, oldValue, newValue);
             }
         };
 
@@ -492,16 +495,15 @@ namespace NoesisJava {
 
     struct JavaNSScrollEventHandler : JavaMethodHandler {
         struct JavaNSScrollEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
-
             float newValue;
             Noesis::ScrollEventType scrollType;
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSScrollEventArgs",
-                 "(JJZFI)V", source_ptr, routedEvent_ptr, handled, newValue, scrollType);
+                                                 "dev/sixik/noesisgui/nsgui/NSScrollEventArgs",
+                                                 "(JJZFI)V", source_ptr, routedEvent_ptr, handled, newValue,
+                                                 scrollType);
             }
-
         };
 
         JavaNSScrollEventArgs args = {};
@@ -510,13 +512,14 @@ namespace NoesisJava {
     struct JavaNSRequestNavigateEventHandler : JavaMethodHandler {
         struct JavaNSRequestNavigateEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
             const char *uri;
-            const char* target;
+            const char *target;
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSRequestNavigateEventArgs",
-                 "(JJZLjava/lang/String;Ljava/lang/String;)V",
-                 source_ptr, routedEvent_ptr, handled, env->NewStringUTF(uri), env->NewStringUTF(target));
+                                                 "dev/sixik/noesisgui/nsgui/NSRequestNavigateEventArgs",
+                                                 "(JJZLjava/lang/String;Ljava/lang/String;)V",
+                                                 source_ptr, routedEvent_ptr, handled, env->NewStringUTF(uri),
+                                                 env->NewStringUTF(target));
             }
         };
 
@@ -529,8 +532,8 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                     "dev/sixik/noesisgui/nsgui/NSPropertyChangedEventArgs",
-                     "(Ljava/lang/String;)V", env->NewStringUTF(symbol.Str()));
+                                                 "dev/sixik/noesisgui/nsgui/NSPropertyChangedEventArgs",
+                                                 "(Ljava/lang/String;)V", env->NewStringUTF(symbol.Str()));
             }
         };
 
@@ -545,10 +548,12 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSDragCompletedEventArgs",
-                 "(JJZZFF)V", source_ptr, routedEvent_ptr, handled, canceled, horizontalChange, verticalChange);
+                                                 "dev/sixik/noesisgui/nsgui/NSDragCompletedEventArgs",
+                                                 "(JJZZFF)V", source_ptr, routedEvent_ptr, handled, canceled,
+                                                 horizontalChange, verticalChange);
             }
         };
+
         JavaNSDragCompletedEventArgs args = {};
     };
 
@@ -559,8 +564,9 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSDragDeltaEventArgs",
-                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, horizontalChange, verticalChange);
+                                                 "dev/sixik/noesisgui/nsgui/NSDragDeltaEventArgs",
+                                                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, horizontalChange,
+                                                 verticalChange);
             }
         };
 
@@ -574,19 +580,67 @@ namespace NoesisJava {
 
             jobject Create(JNIEnv *env) override {
                 return NSJavaUtils::createObject(env,
-                 "dev/sixik/noesisgui/nsgui/NSDragStartedEventArgs",
-                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, horizontalChange, verticalChange);
+                                                 "dev/sixik/noesisgui/nsgui/NSDragStartedEventArgs",
+                                                 "(JJZFF)V", source_ptr, routedEvent_ptr, handled, horizontalChange,
+                                                 verticalChange);
             }
         };
 
         JavaNSDragStartedEventArgs args = {};
     };
 
-    template <typename JavaArgsType>
+    struct JavaNSSelectionChangedEventHandler : JavaMethodHandler {
+        struct JavaNSSelectionChangedEventArgs : JavaRoutedEventHandler::JavaNSRoutedEventArgs {
+            Noesis::SelectionChangedEventArgs args = Noesis::SelectionChangedEventArgs(nullptr);
+
+            jobject Create(JNIEnv* env) override
+            {
+                jlongArray jAdded = nullptr;
+                jlongArray jRemoved = nullptr;
+
+                jAdded = ToJLongArray(env, args.addedItems);
+                jRemoved = ToJLongArray(env, args.removedItems);
+
+                jobject obj = NSJavaUtils::createObject(
+                    env,
+                    "dev/sixik/noesisgui/nsgui/NSSelectionChangedEventArgs",
+                    "(JJZ[J[J)V",
+                    source_ptr, routedEvent_ptr, handled,
+                    jAdded, jRemoved
+                );
+
+                if (jAdded) env->DeleteLocalRef(jAdded);
+                if (jRemoved) env->DeleteLocalRef(jRemoved);
+
+                return obj;
+            }
+
+            static jlongArray ToJLongArray(JNIEnv *env,
+                                           const Noesis::SelectionChangedEventArgs::ItemList &items) {
+                const jsize n = (jsize) items.Size();
+                jlongArray arr = env->NewLongArray(n);
+                if (arr == nullptr) return nullptr;
+
+                std::vector<jlong> tmp;
+                tmp.resize(n);
+
+                for (jsize i = 0; i < n; i++) {
+                    const Noesis::BaseComponent *c = items[i].GetPtr();
+                    tmp[i] = reinterpret_cast<intptr_t>(c);
+                }
+
+                env->SetLongArrayRegion(arr, 0, n, tmp.data());
+                return arr;
+            }
+        };
+
+        JavaNSSelectionChangedEventArgs args = {};
+    };
+
+    template<typename JavaArgsType>
     struct GenericEventHandler {
         jobject handlerGlobal = nullptr;
         jmethodID handlerMethod = nullptr;
-        JavaArgsType args{};  // Stack-аллокация для оптимизации
+        JavaArgsType args{}; // Stack-аллокация для оптимизации
     };
-
 }

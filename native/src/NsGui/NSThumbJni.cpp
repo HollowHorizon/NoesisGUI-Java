@@ -125,7 +125,7 @@ JNIEXPORT void JNICALL Java_dev_sixik_noesisgui_nsgui_NSThumb_nDragStarted(
     JNIEnv *env, jclass clazz, jlong ptr, jobject event) {
     using EventType = Noesis::DragStartedEventArgs;
     using JavaArgsType = NoesisJava::JavaNSDragStartedEventHandler::JavaNSDragStartedEventArgs;
-    constexpr auto sig = "(Ldev/sixik/noesisgui/nscore/NSBaseComponent;Ldev/sixik/noesisgui/nsgui/NSDragDeltaEventArgs;)V";
+    constexpr auto sig = "(Ldev/sixik/noesisgui/nscore/NSBaseComponent;Ldev/sixik/noesisgui/nsgui/NSDragStartedEventArgs;)V";
 
     auto eventAdder = [](Noesis::Thumb *el, auto &&lambda) { el->DragStarted() += lambda; };
     auto argsFiller = [](JavaArgsType &jArgs, const EventType &nArgs) {
