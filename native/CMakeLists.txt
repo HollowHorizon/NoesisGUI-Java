@@ -265,6 +265,10 @@ add_library(noesis_jni SHARED
         src/NsGui/NSSelectedItemsCollectionJni.cpp
         src/NsGui/NSListBoxJni.cpp
         src/NsGui/NSListViewJni.cpp
+        src/providers/JniXamlProvider.cpp
+        src/providers/JniXamlProvider.h
+        src/providers/JniXamlProviderUtils.h
+        src/providers/JniXamlProviderUtils.cpp
 )
 
 # Линкуемся по .lib

@@ -4,6 +4,9 @@
 
 #include <jni.h>
 #include <jni_md.h>
+#include <mutex>
+#include <string>
+#include <unordered_map>
 
 #include "NsGui/IntegrationAPI.h"
 #include "NsGui/IView.h"
@@ -12,8 +15,19 @@
 
 #include "jni.h"
 #include "App/Theme/Include/NsApp/ThemeProviders.h"
+#include "NsGui/MemoryStream.h"
+#include "providers/JniXamlProvider.h"
+#include "providers/JniXamlProviderUtils.h"
 #include "Render/GLRenderDevice/Include/NsRender/GLFactory.h"
 
+
+namespace NoesisJava {
+    class JniXamlProvider;
+}
+
+namespace Noesis {
+    class MemoryStream;
+}
 
 extern "C" {
 JNIEXPORT void JNICALL
@@ -218,4 +232,43 @@ Java_dev_sixik_noesisgui_NoesisGui_nSetLogHandler(
         }
     });
 }
+
+    JNIEXPORT void JNICALL
+Java_dev_sixik_noesisgui_NoesisGui_nSetXamlProvider(JNIEnv* env, jclass, jobject loader) {
+    // Clear previous loader if any
+    if (NoesisJava::JniXamlProviderUtils::g_xamlLoaderGlobal != nullptr) {
+        env->DeleteGlobalRef(NoesisJava::JniXamlProviderUtils::g_xamlLoaderGlobal);
+        NoesisJava::JniXamlProviderUtils::g_xamlLoaderGlobal = nullptr;
+        NoesisJava::JniXamlProviderUtils::g_midLoadXaml = nullptr;
+    }
+
+    if (loader == nullptr) {
+        // Optionally: Noesis::GUI::SetXamlProvider(nullptr);
+        return;
+    }
+
+    // Keep loader alive
+    NoesisJava::JniXamlProviderUtils::g_xamlLoaderGlobal = env->NewGlobalRef(loader);
+
+    jclass cls = env->GetObjectClass(loader);
+    // NoesisXamlLoader#loadXaml(String) -> byte[]
+    NoesisJava::JniXamlProviderUtils::g_midLoadXaml = env->GetMethodID(cls, "loadXaml", "(Ljava/lang/String;)[B");
+    env->DeleteLocalRef(cls);
+
+    if (NoesisJava::JniXamlProviderUtils::g_midLoadXaml == nullptr) {
+        env->DeleteGlobalRef(NoesisJava::JniXamlProviderUtils::g_xamlLoaderGlobal);
+        NoesisJava::JniXamlProviderUtils::g_xamlLoaderGlobal = nullptr;
+        return;
+    }
+
+    // Install provider into Noesis
+    Noesis::GUI::SetXamlProvider(new NoesisJava::JniXamlProvider());
+
+    // Optional: clear cache on provider reset
+    {
+        std::lock_guard<std::mutex> lock(NoesisJava::JniXamlProviderUtils::g_xamlCacheMutex);
+        NoesisJava::JniXamlProviderUtils::g_xamlCache.clear();
+    }
+}
+
 }
