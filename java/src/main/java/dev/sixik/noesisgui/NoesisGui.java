@@ -6,6 +6,7 @@ import dev.sixik.noesisgui.nscore.NSResourceDictionary;
 import dev.sixik.noesisgui.nscore.NSUri;
 import dev.sixik.noesisgui.nsgui.NSFrameworkElement;
 import dev.sixik.noesisgui.nsgui.NSIView;
+import dev.sixik.noesisgui_impl.loaders.NoesisXamlLoader;
 
 public class NoesisGui {
 
@@ -57,6 +58,10 @@ public class NoesisGui {
         return new NSFrameworkElement(nativeParseXaml(xamlCode));
     }
 
+    public static NSBaseComponent parseXamlComponent(final String xamlCode) {
+        return new NSBaseComponent(nativeParseXamlN(xamlCode));
+    }
+
     public static NSBaseComponent parseXamlToBase(final String xamlCode) {
         return new NSBaseComponent(nativeParseXaml(xamlCode));
     }
@@ -87,11 +92,17 @@ public class NoesisGui {
         return (int) unsignedValue;
     }
 
+    public static void setXamlProvider(NoesisXamlLoader loader) {
+        nSetXamlProvider(loader);
+    }
+
     private static native void nativeLoadApplicationResources(long ptr);
 
     private static native void nativeSetThemeProviders();
 
     private static native long nativeParseXaml(String xamlCode);
+
+    private static native long nativeParseXamlN(String xamlCode);
 
     private static native long nativeParseXamlTheme(String xamlCode);
 
@@ -104,4 +115,6 @@ public class NoesisGui {
     private static native void nSetLicense(String name, String key);
 
     private static native void nSetLogHandler(NSLogHandler handler);
+
+    private static native void nSetXamlProvider(NoesisXamlLoader loader);
 }
