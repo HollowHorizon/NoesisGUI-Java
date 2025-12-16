@@ -4,6 +4,7 @@
 
 #ifndef NOESIS_JNI_JNIXAMLPROVIDERUTILS_H
 #define NOESIS_JNI_JNIXAMLPROVIDERUTILS_H
+#include <iostream>
 #include <jni.h>
 #include <mutex>
 #include <unordered_map>
@@ -46,7 +47,9 @@ namespace NoesisJava {
             if (!env || !g_xamlLoaderGlobal || !g_midLoadXaml) return false;
 
             jstring jUri = env->NewStringUTF(uri.c_str());
-            if (!jUri) return false;
+            if (!jUri) {
+                return false;
+            }
 
             auto jBytesObj = (jbyteArray) env->CallObjectMethod(g_xamlLoaderGlobal, g_midLoadXaml, jUri);
             env->DeleteLocalRef(jUri);
@@ -57,7 +60,9 @@ namespace NoesisJava {
                 return false;
             }
 
-            if (jBytesObj == nullptr) return false;
+            if (jBytesObj == nullptr) {
+                return false;
+            }
 
             const jsize len = env->GetArrayLength(jBytesObj);
             out.resize((size_t) len);

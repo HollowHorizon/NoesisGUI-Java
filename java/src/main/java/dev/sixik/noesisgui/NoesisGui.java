@@ -58,6 +58,10 @@ public class NoesisGui {
         return new NSFrameworkElement(nativeParseXaml(xamlCode));
     }
 
+    public static NSBaseComponent parseXamlComponent(final String xamlCode) {
+        return new NSBaseComponent(nativeParseXamlN(xamlCode));
+    }
+
     public static NSBaseComponent parseXamlToBase(final String xamlCode) {
         return new NSBaseComponent(nativeParseXaml(xamlCode));
     }
@@ -97,6 +101,8 @@ public class NoesisGui {
     private static native void nativeSetThemeProviders();
 
     private static native long nativeParseXaml(String xamlCode);
+
+    private static native long nativeParseXamlN(String xamlCode);
 
     private static native long nativeParseXamlTheme(String xamlCode);
 

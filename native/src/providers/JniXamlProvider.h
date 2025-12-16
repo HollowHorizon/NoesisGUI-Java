@@ -4,7 +4,9 @@
 
 #ifndef NOESIS_JNI_JNIXAMLPROVIDER_H
 #define NOESIS_JNI_JNIXAMLPROVIDER_H
+#include <iostream>
 #include <mutex>
+#include <ostream>
 #include <string>
 
 #include "JniXamlProviderUtils.h"
@@ -43,8 +45,12 @@ namespace NoesisJava {
     public:
         Noesis::Ptr<Noesis::Stream> LoadXaml(const Noesis::Uri &uri) override
         {
+
+            std::cout << uri.Str() << std::endl;
             const std::string key = NoesisJava::JniXamlProviderUtils::NormalizeUri(uri.Str());
-            if (key.empty()) return nullptr;
+            if (key.empty()) {
+                return nullptr;
+            }
 
             // 1) Cache hit
             {
@@ -56,11 +62,15 @@ namespace NoesisJava {
             }
 
             // 2) Cache miss -> load from Java
-            JniEnvScope scope = nullptr;
-            if (!scope.env) return nullptr;
+            JniEnvScope scope(g_vm);
+            if (!scope.env) {
+                return nullptr;
+            }
 
             std::vector<uint8_t> tmp;
-            if (!NoesisJava::JniXamlProviderUtils::CallJavaLoadXaml(scope.env, key, tmp)) return nullptr;
+            if (!NoesisJava::JniXamlProviderUtils::CallJavaLoadXaml(scope.env, key, tmp)) {
+                return nullptr;
+            }
 
             auto shared = std::make_shared<std::vector<uint8_t>>(std::move(tmp));
 

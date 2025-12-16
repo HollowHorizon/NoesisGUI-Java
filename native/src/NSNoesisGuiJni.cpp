@@ -74,6 +74,21 @@ Java_dev_sixik_noesisgui_NoesisGui_nativeCreateView(JNIEnv *env, jclass, jlong e
         GiveOwnership());
 }
 
+
+JNIEXPORT jlong JNICALL
+Java_dev_sixik_noesisgui_NoesisGui_nativeParseXamlN(JNIEnv *env, jclass, jstring xamlCode) {
+    if (xamlCode == nullptr) return 0;
+
+    const char *nativeCode = env->GetStringUTFChars(xamlCode, nullptr);
+    if (!nativeCode) return 0;
+
+    const auto t = Noesis::GUI::ParseXaml(nativeCode);
+    const auto t_ptr = t.GetPtr();
+    if (t_ptr != nullptr)
+        t_ptr->AddReference();
+    return reinterpret_cast<jlong>(t_ptr);
+}
+
 JNIEXPORT jlong JNICALL
 Java_dev_sixik_noesisgui_NoesisGui_nativeParseXamlTheme(JNIEnv *env, jclass, jstring xamlCode) {
     if (xamlCode == nullptr) return 0;
@@ -111,6 +126,10 @@ Java_dev_sixik_noesisgui_NoesisGui_nativeParseXaml(JNIEnv *env, jclass, jstring 
     try {
         root = Noesis::GUI::ParseXaml(nativeCode);
     } catch (...) {
+        jclass excCls = env->FindClass("java/lang/IllegalStateException");
+        if (excCls != nullptr) {
+            env->ThrowNew(excCls, "Java_dev_sixik_noesisgui_NoesisGui_nativeParseXaml");
+        }
         env->ReleaseStringUTFChars(xamlCode, nativeCode);
         return 0;
     }
