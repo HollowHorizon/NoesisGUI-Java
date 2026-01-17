@@ -61,7 +61,14 @@ endif()
 
 # Устанавливаем пути к бинарникам Noesis
 set(NOESIS_BIN_DIR "${NOESIS_SDK_DIR}/Bin/${NOESIS_ARCH_DIR}")
-set(NOESIS_LIB_DIR "${NOESIS_SDK_DIR}/Lib/${NOESIS_ARCH_DIR}")
+
+if (APPLE OR UNIX)
+    # На Mac библиотека лежит в Bin, а не в Lib
+    set(NOESIS_LIB_DIR "${NOESIS_SDK_DIR}/Bin/${NOESIS_ARCH_DIR}")
+else()
+    # Для Windows и Linux (если ты скопировал .so в Lib) оставляем как было
+    set(NOESIS_LIB_DIR "${NOESIS_SDK_DIR}/Lib/${NOESIS_ARCH_DIR}")
+endif()
 
 if (NOT EXISTS "${NOESIS_LIB_DIR}")
     message(WARNING "Noesis Lib directory not found at: ${NOESIS_LIB_DIR}. Check your SDK structure.")
@@ -338,9 +345,20 @@ add_library(noesis_jni SHARED
 
 target_link_directories(noesis_jni PRIVATE ${NOESIS_LIB_DIR})
 
+if (WIN32)
+    set(LIB_NOESIS_NAME "Noesis.lib")
+    set(LIB_NOESIS_APP_NAME "NoesisApp.lib")
+elseif (APPLE)
+    set(LIB_NOESIS_NAME "Noesis.dylib")
+    set(LIB_NOESIS_APP_NAME "NoesisApp.dylib")
+else() # Linux
+    set(LIB_NOESIS_NAME "libNoesis.so")
+    set(LIB_NOESIS_APP_NAME "libNoesisApp.so")
+endif()
+
 target_link_libraries(noesis_jni
-        Noesis
-        NoesisApp
+    "${NOESIS_LIB_DIR}/${LIB_NOESIS_NAME}"
+    "${NOESIS_LIB_DIR}/${LIB_NOESIS_APP_NAME}"
 )
 
 # ====== КОПИРОВАНИЕ ЗАВИСИМОСТЕЙ ======

@@ -4,6 +4,8 @@
 
 #ifndef NOESIS_JNI_JNIXAMLPROVIDER_H
 #define NOESIS_JNI_JNIXAMLPROVIDER_H
+#include <vector>
+#include <memory>
 #include <iostream>
 #include <mutex>
 #include <ostream>

@@ -4,6 +4,11 @@
 
 #ifndef NOESIS_JNI_JNIXAMLPROVIDERUTILS_H
 #define NOESIS_JNI_JNIXAMLPROVIDERUTILS_H
+#include <vector>
+#include <memory>
+#include <string>
+#include <unordered_map>
+
 #include <iostream>
 #include <jni.h>
 #include <mutex>
