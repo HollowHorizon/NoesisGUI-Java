@@ -51,6 +51,11 @@ jobs:
         with:
           java-version: '21'
           distribution: 'temurin'
+      - name: Install Linux Dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libgl1-mesa-dev
 
       - name: Grant execute permission for gradlew
         run: chmod +x java/gradlew
