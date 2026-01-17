@@ -9,7 +9,7 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/Launcher/Include/NsApp/LauncherApi.h>
+#include <NsApp/LauncherApi.h>
 
 
 namespace NoesisApp

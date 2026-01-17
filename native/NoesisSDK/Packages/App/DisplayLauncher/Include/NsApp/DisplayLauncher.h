@@ -9,8 +9,8 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/DisplayLauncher/Include/NsApp/DisplayLauncherApi.h>
-#include <App/Launcher/Include/NsApp/Launcher.h>
+#include <NsApp/DisplayLauncherApi.h>
+#include <NsApp/Launcher.h>
 #include <NsCore/Ptr.h>
 
 

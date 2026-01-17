@@ -9,7 +9,7 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/LangServerHelpers/Include/NsApp/LangServerHelpersApi.h>
+#include <NsApp/LangServerHelpersApi.h>
 
 
 namespace Noesis { class UIElement; }

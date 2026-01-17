@@ -9,7 +9,7 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/Providers/Include/NsApp/ProvidersApi.h>
+#include <NsApp/ProvidersApi.h>
 
 
 namespace NoesisApp

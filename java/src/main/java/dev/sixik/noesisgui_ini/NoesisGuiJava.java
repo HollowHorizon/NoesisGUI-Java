@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.Locale;
 
 public class NoesisGuiJava {
 
@@ -14,35 +15,35 @@ public class NoesisGuiJava {
     }
 
     public static void Initialize() {
-        if(loaded) return;
+        if (loaded) return;
 
         try {
-            // Создаём одну временную папку под все DLL
-            Path tempDir = Files.createTempDirectory("noesis_native_");
+            // 1. Определяем платформу
+            Platform platform = detectPlatform();
+
+            // 2. Создаём временную папку
+            Path tempDir = Files.createTempDirectory("noesis_native_" + platform.name + "_");
             tempDir.toFile().deleteOnExit();
 
-            // Список библиотек, как ты их назовёшь / как дают Noesis
-            String[] libs = {
-                    "Noesis.dll",      // пример, реальные имена подставишь свои
-                    "NoesisApp.dll",   // если нужна
-                    "noesis_jni.dll"   // наш JNI-слой
-            };
+            // 3. Формируем список библиотек для конкретной платформы
+            // Порядок важен: сначала зависимости (Noesis), потом JNI
+            String[] libs = getLibraryNames(platform);
 
-            for (String lib : libs) {
-                extractLib("/native/win64/" + lib, tempDir.resolve(lib));
+            // 4. Извлекаем и загружаем
+            for (String libName : libs) {
+                // Путь в ресурсах: /native/windows/Noesis.dll
+                String resourcePath = "/native/" + platform.resourceDir + "/" + libName;
+                Path extractionPath = tempDir.resolve(libName);
+
+                extractLib(resourcePath, extractionPath);
+
+                // Загружаем библиотеку по абсолютному пути
+                System.load(extractionPath.toAbsolutePath().toString());
             }
-
-            // ВАЖНО: сначала грузим сами Noesis DLL,
-            // потом – наш noesis_jni.dll
-            System.load(tempDir.resolve("Noesis.dll").toString());
-            // если есть ещё зависимости:
-             System.load(tempDir.resolve("NoesisApp.dll").toString());
-
-            System.load(tempDir.resolve("noesis_jni.dll").toString());
 
             loaded = true;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to load Noesis native libs", e);
+            throw new RuntimeException("Failed to load Noesis native libs for current platform", e);
         }
     }
 
@@ -52,7 +53,61 @@ public class NoesisGuiJava {
                 throw new RuntimeException("Native resource not found: " + resourcePath);
             }
             Files.copy(in, dst, StandardCopyOption.REPLACE_EXISTING);
+            // Удаляем файл при выходе, чтобы не мусорить в tmp
             dst.toFile().deleteOnExit();
         }
+    }
+
+    private static class Platform {
+        String name;
+        String resourceDir; // имя папки в ресурсах (windows, linux, macos)
+        String libPrefix;   // "lib" для *nix
+        String libExt;      // .dll, .so, .dylib
+
+        Platform(String name, String resourceDir, String libPrefix, String libExt) {
+            this.name = name;
+            this.resourceDir = resourceDir;
+            this.libPrefix = libPrefix;
+            this.libExt = libExt;
+        }
+    }
+
+    private static Platform detectPlatform() {
+        String osName = System.getProperty("os.name").toLowerCase(Locale.ROOT);
+
+        if (osName.contains("win")) {
+            return new Platform("windows", "windows", "", ".dll");
+        } else if (osName.contains("mac") || osName.contains("darwin")) {
+            // На Mac библиотеки обычно имеют префикс lib, даже если это JNI
+            return new Platform("macos", "macos", "lib", ".dylib");
+        } else if (osName.contains("nux") || osName.contains("nix")) {
+            return new Platform("linux", "linux", "lib", ".so");
+        } else {
+            throw new UnsupportedOperationException("Unsupported OS: " + osName);
+        }
+    }
+
+    private static String[] getLibraryNames(Platform platform) {
+        // Формируем имена файлов.
+        // CMake скрипт (стандартный) добавляет 'lib' для Linux/Mac к именам таргетов.
+        // NoesisSDK:
+        // Windows: Noesis.dll, NoesisApp.dll
+        // Linux: libNoesis.so, libNoesisApp.so
+        // Mac: libNoesis.dylib, libNoesisApp.dylib (обычно так, если скопированы из SDK/bin)
+
+        // Наша библиотека JNI:
+        // Windows: noesis_jni.dll
+        // Linux: libnoesis_jni.so
+        // Mac: libnoesis_jni.dylib
+
+        String noesisLib = platform.libPrefix + "Noesis" + platform.libExt;
+        String noesisAppLib = platform.libPrefix + "NoesisApp" + platform.libExt;
+        String jniLib = platform.libPrefix + "noesis_jni" + platform.libExt;
+
+        return new String[] {
+                noesisLib,
+                noesisAppLib,
+                jniLib
+        };
     }
 }

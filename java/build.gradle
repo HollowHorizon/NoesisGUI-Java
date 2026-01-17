@@ -1,3 +1,5 @@
+import org.gradle.nativeplatform.platform.internal.DefaultNativePlatform
+
 plugins {
     id 'java'
 }
@@ -8,6 +10,20 @@ version = '1.0-pre-4'
 repositories {
     mavenCentral()
 }
+
+def os = DefaultNativePlatform.currentOperatingSystem
+def arch = DefaultNativePlatform.currentArchitecture
+
+def lwjglNatives = ""
+if (os.isWindows()) {
+    lwjglNatives = "natives-windows"
+} else if (os.isLinux()) {
+    lwjglNatives = "natives-linux"
+} else if (os.isMacOsX()) {
+    lwjglNatives = "natives-macos"
+}
+
+if (arch.name.contains("arm") || arch.name.contains("aarch64")) lwjglNatives += "-arm64"
 
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
@@ -20,11 +36,40 @@ dependencies {
     implementation("org.lwjgl:lwjgl-opengl:${lwjglVersion}")
     implementation("org.lwjgl:lwjgl-glfw:${lwjglVersion}")
 
-    runtimeOnly("org.lwjgl:lwjgl:${lwjglVersion}:natives-windows")
-    runtimeOnly("org.lwjgl:lwjgl-opengl:${lwjglVersion}:natives-windows")
-    runtimeOnly("org.lwjgl:lwjgl-glfw:${lwjglVersion}:natives-windows")
+    runtimeOnly("org.lwjgl:lwjgl:${lwjglVersion}:${lwjglNatives}")
+    runtimeOnly("org.lwjgl:lwjgl-opengl:${lwjglVersion}:${lwjglNatives}")
+    runtimeOnly("org.lwjgl:lwjgl-glfw:${lwjglVersion}:${lwjglNatives}")
 }
 
 test {
     useJUnitPlatform()
 }
+
+def cmakeSourceDir = file("../native")
+def cmakeBuildDir = file("$buildDir/cmake-build")
+
+tasks.register('createCmakeBuildDir') {
+    doLast {
+        if (!cmakeBuildDir.exists()) {
+            cmakeBuildDir.mkdirs()
+        }
+    }
+}
+
+tasks.register('cmakeConfig', Exec) {
+    dependsOn createCmakeBuildDir
+    workingDir cmakeBuildDir
+
+    def cmd = ['cmake', cmakeSourceDir.absolutePath]
+
+    commandLine cmd
+}
+
+tasks.register('cmakeBuild', Exec) {
+    dependsOn cmakeConfig
+    workingDir cmakeBuildDir
+
+    commandLine 'cmake', '--build', '.', '--config', 'Release'
+}
+
+processResources.dependsOn cmakeBuild

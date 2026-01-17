@@ -14,7 +14,7 @@
 #include <NsCore/ReflectionDeclare.h>
 #include <NsCore/ReflectionDeclareEnum.h>
 #include <NsGui/UserControl.h>
-#include <App/ApplicationLauncher/Include/NsApp/ApplicationLauncherApi.h>
+#include <NsApp/ApplicationLauncherApi.h>
 
 
 namespace NoesisApp

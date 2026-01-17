@@ -9,7 +9,7 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/Interactivity/Include/NsApp/EventTriggerBase.h>
+#include <NsApp/EventTriggerBase.h>
 #include <NsGui/UIElement.h>
 
 

@@ -12,7 +12,7 @@
 #include <NsCore/Delegate.h>
 #include <NsCore/ReflectionDeclare.h>
 #include <NsGui/BaseCommand.h>
-#include <App/ApplicationLauncher/Include/NsApp/ApplicationLauncherApi.h>
+#include <NsApp/ApplicationLauncherApi.h>
 
 
 namespace NoesisApp

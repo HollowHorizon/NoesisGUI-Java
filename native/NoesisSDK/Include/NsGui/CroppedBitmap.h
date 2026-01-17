@@ -31,7 +31,7 @@ NS_MSVC_WARNING_DISABLE(4251 4275)
 ///      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 ///      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 ///      xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
-///      xmlns:NoesisSDK="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions">
+///      xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions">
 ///      <Grid.Resources>
 ///        <BitmapImage x:Key="aladin" UriSource="aladin.png"/>
 ///        <CroppedBitmap x:Key="aladin01" Source="{StaticResource aladin}" SourceRect="145,58,33,54"/>

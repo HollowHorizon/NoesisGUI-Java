@@ -26,11 +26,11 @@ NS_MSVC_WARNING_DISABLE(4251 4275)
 ///    <Grid
 ///      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 ///      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-///      xmlns:NoesisSDK="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions">
+///      xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions">
 ///        <Rectangle Fill="Red" Width="400" Height="200">
-///            <NoesisSDK:Element.Transform3D>
-///                <NoesisSDK:MatrixTransform3D Matrix="{Binding PlayerTransform}"/>
-///           </NoesisSDK:Element.Transform3D>
+///            <noesis:Element.Transform3D>
+///                <noesis:MatrixTransform3D Matrix="{Binding PlayerTransform}"/>
+///           </noesis:Element.Transform3D>
 ///        </Rectangle>
 ///    </Grid>
 ///

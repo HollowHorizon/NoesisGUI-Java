@@ -8,9 +8,9 @@
 #define __APP_WAVESBRUSH_H__
 
 
-#include <App/Shaders/Include/NsApp/ShadersApi.h>
+#include <NsApp/ShadersApi.h>
 #include <NsGui/BrushShader.h>
-#include <Render/RenderContext/Include/NsRender/RenderContext.h>
+#include <NsRender/RenderContext.h>
 
 
 namespace Noesis { class DependencyProperty; }

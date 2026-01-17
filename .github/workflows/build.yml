@@ -1,0 +1,86 @@
+name: Build Cross-Platform JNI
+
+on: [push, pull_request]
+
+jobs:
+  build-natives:
+    name: Build Native (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            platform-name: windows
+          - os: ubuntu-latest
+            platform-name: linux
+          - os: macos-latest
+            platform-name: macos
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        if: runner.os != 'Windows'
+        run: chmod +x java/gradlew
+
+      - name: Build with Gradle (CMake Trigger)
+        working-directory: ./java
+        run: ./gradlew processResources --info
+
+      - name: Upload Natives
+        uses: actions/upload-artifact@v4
+        with:
+          name: natives-${{ matrix.platform-name }}
+          path: java/src/main/resources/native/${{ matrix.platform-name }}/**
+
+  package-jar:
+    needs: build-natives
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x java/gradlew
+
+      # Скачиваем скомпилированные библиотеки
+      - name: Download Windows Natives
+        uses: actions/download-artifact@v4
+        with:
+          name: natives-windows
+          path: java/src/main/resources/native/windows
+
+      - name: Download Linux Natives
+        uses: actions/download-artifact@v4
+        with:
+          name: natives-linux
+          path: java/src/main/resources/native/linux
+
+      - name: Download Mac Natives
+        uses: actions/download-artifact@v4
+        with:
+          name: natives-macos
+          path: java/src/main/resources/native/macos
+
+      # Собираем итоговый JAR
+      - name: Build Final JAR
+        working-directory: ./java
+        run: ./gradlew jar
+
+      - name: Upload JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: noesis-jni-all-platforms
+          path: java/build/libs/*.jar

@@ -10,7 +10,7 @@
 
 #include <NsCore/Noesis.h>
 #include <NsCore/ReflectionDeclareEnum.h>
-#include <App/Interactivity/Include/NsApp/StoryboardTrigger.h>
+#include <NsApp/StoryboardTrigger.h>
 
 
 namespace Noesis

@@ -9,9 +9,9 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/Interactivity/Include/NsApp/InteractivityApi.h>
-#include <App/RiveBase/Include/NsApp/RiveControl.h>
-#include <App/Interactivity/Include/NsApp/TargetedTriggerAction.h>
+#include <NsApp/InteractivityApi.h>
+#include <NsApp/RiveControl.h>
+#include <NsApp/TargetedTriggerAction.h>
 
 
 namespace NoesisApp

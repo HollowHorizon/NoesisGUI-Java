@@ -9,7 +9,7 @@
 
 
 #include <NsCore/Noesis.h>
-#include <Render/RenderContext/Include/NsRender/RenderContextApi.h>
+#include <NsRender/RenderContextApi.h>
 #include <NsCore/BaseComponent.h>
 
 

@@ -10,8 +10,8 @@
 
 #include <NsCore/Noesis.h>
 #include <NsGui/Animatable.h>
-#include <App/Interactivity/Include/NsApp/InteractivityApi.h>
-#include <App/Interactivity/Include/NsApp/IAttachedObject.h>
+#include <NsApp/InteractivityApi.h>
+#include <NsApp/IAttachedObject.h>
 
 
 namespace Noesis

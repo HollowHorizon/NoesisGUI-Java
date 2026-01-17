@@ -35,15 +35,15 @@ NS_MSVC_WARNING_DISABLE(4251 4275)
 ///
 ///    <Grid
 ///      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-///      xmlns:NoesisSDK="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
+///      xmlns:noesis="clr-namespace:NoesisGUIExtensions;assembly=Noesis.GUI.Extensions"
 ///      xmlns:local="clr-namespace:CustomBrushes">
 ///
 ///      <Rectangle Width="300" Height="300">
 ///        <Rectangle.Fill>
 ///          <ImageBrush ImageSource="Images/image.jpg">
-///            <NoesisSDK:Brush.Shader>
+///            <noesis:Brush.Shader>
 ///              <local:WaveBrush Frequency="0.7" />
-///            </NoesisSDK:Brush.Shader>
+///            </noesis:Brush.Shader>
 ///          </ImageBrush>
 ///        </Rectangle.Fill>
 ///      </Rectangle>

@@ -9,7 +9,7 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/LangServer/Include/NsApp/LangServerApi.h>
+#include <NsApp/LangServerApi.h>
 
 
 #ifndef HAVE_LANG_SERVER

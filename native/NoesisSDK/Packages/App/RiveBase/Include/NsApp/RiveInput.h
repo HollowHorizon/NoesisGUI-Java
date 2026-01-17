@@ -11,7 +11,7 @@
 #include <NsCore/Noesis.h>
 #include <NsCore/Delegate.h>
 #include <NsGui/Animatable.h>
-#include <App/RiveBase/Include/NsApp/RiveBaseApi.h>
+#include <NsApp/RiveBaseApi.h>
 
 
 namespace NoesisApp

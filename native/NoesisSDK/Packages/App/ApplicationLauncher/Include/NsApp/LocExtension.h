@@ -13,7 +13,7 @@
 #include <NsCore/Ptr.h>
 #include <NsGui/MarkupExtension.h>
 #include <NsGui/IValueConverter.h>
-#include <App/ApplicationLauncher/Include/NsApp/ApplicationLauncherApi.h>
+#include <NsApp/ApplicationLauncherApi.h>
 
 
 namespace Noesis

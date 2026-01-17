@@ -9,7 +9,7 @@
 
 
 #include <NsCore/Noesis.h>
-#include <App/Interactivity/Include/NsApp/AttachableObject.h>
+#include <NsApp/AttachableObject.h>
 
 
 namespace NoesisApp

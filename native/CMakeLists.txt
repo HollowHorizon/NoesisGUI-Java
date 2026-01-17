@@ -6,42 +6,107 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-set(NATIVE_OUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../java/src/main/resources/native/win64")
+# Определение платформы
+if (WIN32)
+    set(PLATFORM_NAME "windows")
+    set(LIB_EXT ".dll")
+    set(LIB_PREFIX "") # Noesis.dll (без lib)
+elseif (APPLE)
+    set(PLATFORM_NAME "macos")
+    set(LIB_EXT ".dylib")
+    set(LIB_PREFIX "") # Обычно на Mac фреймворки или dylib тоже могут быть без lib, но проверим ниже
+elseif (UNIX AND NOT APPLE)
+    set(PLATFORM_NAME "linux")
+    set(LIB_EXT ".so")
+    set(LIB_PREFIX "lib")
+else()
+    message(FATAL_ERROR "Unsupported platform")
+endif()
 
-set(NOESIS_SDK_DIR "${CMAKE_SOURCE_DIR}/NoesisSDK" CACHE PATH "Local Noesis SDK")
-set(JAVA_HOME "C:/Program Files/Java/jdk-21" CACHE PATH "Path to JDK 21")
+# Определение архитектуры
+if (CMAKE_SYSTEM_PROCESSOR MATCHES "arm" OR CMAKE_SYSTEM_PROCESSOR MATCHES "aarch64")
+    set(ARCH_NAME "arm64")
+    # Для Mac часто SDK лежит просто в macos, для Windows/Linux - с суффиксом
+    if (APPLE)
+         set(NOESIS_ARCH_DIR "macos") 
+    else()
+         set(NOESIS_ARCH_DIR "${PLATFORM_NAME}_arm64")
+    endif()
+else()
+    set(ARCH_NAME "x86_64")
+    if (APPLE)
+         set(NOESIS_ARCH_DIR "macos")
+    else()
+         set(NOESIS_ARCH_DIR "${PLATFORM_NAME}_x86_64")
+    endif()
+endif()
 
-# ====== НАСТРОЙКИ ПУТЕЙ ======
+message(STATUS "Configuring for ${PLATFORM_NAME} (${ARCH_NAME}) -> SDK Path: ${NOESIS_ARCH_DIR}")
 
-# Проверяем, что есть include
+# ====== ПУТИ ВВОДА/ВЫВОДА ======
+
+# Выходная директория меняется в зависимости от платформы, чтобы не валить всё в win64
+set(NATIVE_OUT_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../java/src/main/resources/native/${PLATFORM_NAME}")
+
+# Путь к Noesis SDK (можно передать через -DNOESIS_SDK_DIR=...)
+set(NOESIS_SDK_DIR "${CMAKE_SOURCE_DIR}/NoesisSDK" CACHE PATH "Path to Noesis SDK")
+
+# Поиск Java и JNI (автоматически, без хардкода JAVA_HOME)
+find_package(JNI REQUIRED)
+
+# Проверяем структуру SDK
 if (NOT EXISTS "${NOESIS_SDK_DIR}/Include")
     message(FATAL_ERROR "NOESIS_SDK_DIR (${NOESIS_SDK_DIR}) is wrong: Include/ not found")
 endif()
 
-# Проверяем, что есть jni.h
-if (NOT EXISTS "${JAVA_HOME}/include/jni.h")
-    message(FATAL_ERROR "JAVA_HOME (${JAVA_HOME}) is wrong: include/jni.h not found")
+# Устанавливаем пути к бинарникам Noesis
+set(NOESIS_BIN_DIR "${NOESIS_SDK_DIR}/Bin/${NOESIS_ARCH_DIR}")
+set(NOESIS_LIB_DIR "${NOESIS_SDK_DIR}/Lib/${NOESIS_ARCH_DIR}")
+
+if (NOT EXISTS "${NOESIS_LIB_DIR}")
+    message(WARNING "Noesis Lib directory not found at: ${NOESIS_LIB_DIR}. Check your SDK structure.")
 endif()
 
-# Пути к JNI и Noesis headers
+set(PACKAGES_DIR "${NOESIS_SDK_DIR}/Packages")
+
+# ====== INCLUDE ======
 include_directories(
         ${NOESIS_SDK_DIR}/Include
-        ${NOESIS_SDK_DIR}/Packages
-        ${JAVA_HOME}/include
+        ${JNI_INCLUDE_DIRS}
+        
+        # ВАЖНО: Добавляем корень Packages, чтобы работали пути вида <App/Theme/...>
+        ${PACKAGES_DIR}
+
+        # Явное добавление путей к компонентам Noesis App Framework (для путей вида <NsApp/...>)
+        ${PACKAGES_DIR}/App/ApplicationLauncher/Include
+        ${PACKAGES_DIR}/App/Theme/Include                 # <-- БЫЛО ПРОПУЩЕНО
+        ${PACKAGES_DIR}/App/Display/Include
+        ${PACKAGES_DIR}/App/DisplayLauncher/Include
+        ${PACKAGES_DIR}/App/Interactivity/Include
+        ${PACKAGES_DIR}/App/MediaElement/Include
+        ${PACKAGES_DIR}/App/Providers/Include
+        ${PACKAGES_DIR}/App/Rive/Include
+        ${PACKAGES_DIR}/App/RiveBase/Include
+        ${PACKAGES_DIR}/App/Shaders/Include
+        ${PACKAGES_DIR}/App/LangServer/Include
+        ${PACKAGES_DIR}/App/LangServerHelpers/Include
+        ${PACKAGES_DIR}/App/Launcher/Include
+        
+        # Рендер
+        ${PACKAGES_DIR}/Render/RenderContext/Include
+        ${PACKAGES_DIR}/Render/GLRenderContext/Include
+        ${PACKAGES_DIR}/Render/GLRenderDevice/Include    # <-- БЫЛО ПРОПУЩЕНО (нужно для GLFactory.h)
 )
 
 if (WIN32)
     include_directories(${JAVA_HOME}/include/win32)
+elseif (APPLE)
+    include_directories(${JAVA_HOME}/include/darwin)
 else()
     include_directories(${JAVA_HOME}/include/linux)
 endif()
 
-# Выбираем нужные подпапки для x64 Windows
-if (WIN32 AND CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(NOESIS_BIN_DIR "${NOESIS_SDK_DIR}/Bin/windows_x86_64")
-    set(NOESIS_LIB_DIR "${NOESIS_SDK_DIR}/Lib/windows_x86_64") # <-- проверь, что такая папка есть
-endif()
-
+# ====== ИСХОДНИКИ ======
 add_library(noesis_jni SHARED
         src/NsDrawing/NSColorJni.cpp
         src/NsDrawing/NSCornerRadiusJni.cpp
@@ -271,52 +336,46 @@ add_library(noesis_jni SHARED
         src/providers/JniXamlProviderUtils.cpp
 )
 
-# Линкуемся по .lib
-if (NOESIS_LIB_DIR)
-    target_link_directories(noesis_jni PRIVATE
-            ${NOESIS_LIB_DIR}
-    )
-endif()
+target_link_directories(noesis_jni PRIVATE ${NOESIS_LIB_DIR})
 
 target_link_libraries(noesis_jni
-        Noesis         # Noesis.lib
-        NoesisApp      # NoesisApp.lib (если используешь App API)
+        Noesis
+        NoesisApp
 )
 
-# После сборки копируем DLL рядом с noesis_jni.dll
-if (NOESIS_BIN_DIR)
-    add_custom_command(TARGET noesis_jni POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${NOESIS_BIN_DIR}/Noesis.dll"
-            "$<TARGET_FILE_DIR:noesis_jni>/Noesis.dll"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${NOESIS_BIN_DIR}/NoesisApp.dll"
-            "$<TARGET_FILE_DIR:noesis_jni>/NoesisApp.dll"
-    )
-endif()
+# ====== КОПИРОВАНИЕ ЗАВИСИМОСТЕЙ ======
+# Копируем .dll / .so / .dylib рядом с результатом сборки и в resources
+# Используем генераторные выражения для кроссплатформенности
 
+add_custom_command(TARGET noesis_jni POST_BUILD
+        # Создаем папку назначения (resources/native/PLATFORM)
+        COMMAND ${CMAKE_COMMAND} -E make_directory "${NATIVE_OUT_DIR}"
+        
+        # Копируем саму библиотеку JNI
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "$<TARGET_FILE:noesis_jni>"
+        "${NATIVE_OUT_DIR}/$<TARGET_FILE_NAME:noesis_jni>"
+
+        # Копируем Noesis SDK shared libs
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${NOESIS_BIN_DIR}/${LIB_PREFIX}Noesis${LIB_EXT}"
+        "${NATIVE_OUT_DIR}/${LIB_PREFIX}Noesis${LIB_EXT}"
+        
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+        "${NOESIS_BIN_DIR}/${LIB_PREFIX}NoesisApp${LIB_EXT}"
+        "${NATIVE_OUT_DIR}/${LIB_PREFIX}NoesisApp${LIB_EXT}"
+)
+
+# Настройка свойств таргета
 set_target_properties(noesis_jni PROPERTIES
         OUTPUT_NAME "noesis_jni"
         RUNTIME_OUTPUT_DIRECTORY "${NATIVE_OUT_DIR}"
 )
 
-# Для многоконфигурационных (Visual Studio, Xcode) лучше так:
+# Поддержка IDE с мультиконфигурацией (VS, Xcode)
 foreach(cfg IN LISTS CMAKE_CONFIGURATION_TYPES)
     string(TOUPPER "${cfg}" CFG_UPPER)
     set_target_properties(noesis_jni PROPERTIES
             RUNTIME_OUTPUT_DIRECTORY_${CFG_UPPER} "${NATIVE_OUT_DIR}"
     )
 endforeach()
-
-# И копирование Noesis.dll / NoesisApp.dll уже в ЭТУ же папку:
-if (NOESIS_BIN_DIR)
-    add_custom_command(TARGET noesis_jni POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E make_directory "${NATIVE_OUT_DIR}"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${NOESIS_BIN_DIR}/Noesis.dll"
-            "${NATIVE_OUT_DIR}/Noesis.dll"
-            COMMAND ${CMAKE_COMMAND} -E copy_if_different
-            "${NOESIS_BIN_DIR}/NoesisApp.dll"
-            "${NATIVE_OUT_DIR}/NoesisApp.dll"
-    )
-endif()

@@ -8,7 +8,7 @@
 #define __APP_FILESYSTEMWATCHER_H__
 
 
-#include <App/Providers/Include/NsApp/ProvidersApi.h>
+#include <NsApp/ProvidersApi.h>
 #include <NsCore/Delegate.h>
 
 

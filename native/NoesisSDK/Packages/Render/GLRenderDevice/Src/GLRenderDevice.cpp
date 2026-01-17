@@ -19,8 +19,8 @@
 #include <NsCore/StringUtils.h>
 #include <NsCore/String.h>
 
-#include <cstdio>
-#include <cstdarg>
+#include <stdio.h>
+#include <stdarg.h>
 
 #if NS_RENDERER_USE_NSGL
     #include <OpenGL/CGLCurrent.h>

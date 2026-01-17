@@ -81,7 +81,7 @@
 #if NS_PROFILER_ATRACE
     // https://developer.android.com/studio/profile/systrace
     // Remember to enable debuggable in the manifest and custom events in systrace (-a)
-    //  systrace.py -a com.NoesisSDK.Samples.HelloWorld perf sched gfx view
+    //  systrace.py -a com.noesis.Samples.HelloWorld perf sched gfx view
     #include <NsCore/KernelApi.h>
     #include <dlfcn.h> 
 
