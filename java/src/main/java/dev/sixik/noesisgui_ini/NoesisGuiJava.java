@@ -88,21 +88,18 @@ public class NoesisGuiJava {
     }
 
     private static String[] getLibraryNames(Platform platform) {
-        // Формируем имена файлов.
-        // CMake скрипт (стандартный) добавляет 'lib' для Linux/Mac к именам таргетов.
-        // NoesisSDK:
-        // Windows: Noesis.dll, NoesisApp.dll
-        // Linux: libNoesis.so, libNoesisApp.so
-        // Mac: libNoesis.dylib, libNoesisApp.dylib (обычно так, если скопированы из SDK/bin)
-
-        // Наша библиотека JNI:
-        // Windows: noesis_jni.dll
-        // Linux: libnoesis_jni.so
-        // Mac: libnoesis_jni.dylib
-
         String noesisLib = platform.libPrefix + "Noesis" + platform.libExt;
         String noesisAppLib = platform.libPrefix + "NoesisApp" + platform.libExt;
         String jniLib = platform.libPrefix + "noesis_jni" + platform.libExt;
+
+        // На Mac NoesisApp влинкована статически, отдельного файла нет.
+        if (platform.name.equals("macos")) {
+            return new String[] {
+                    noesisLib,
+                    // noesisAppLib пропускаем
+                    jniLib
+            };
+        }
 
         return new String[] {
                 noesisLib,
